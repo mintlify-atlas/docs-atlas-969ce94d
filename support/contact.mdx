@@ -1,0 +1,141 @@
+---
+title: 'Contact Support'
+description: 'Get help with the school management system'
+---
+
+## Get in Touch
+
+Need assistance with the school management system? We're here to help! Whether you have questions, encounter technical issues, or need guidance on using specific features, our support team is ready to assist you.
+
+## Contact Form
+
+The fastest way to reach us is through the built-in contact form in the system. The contact form is processed by `Contact.php` and stores all inquiries in the database for tracking and follow-up.
+
+### How to Use the Contact Form
+
+1. **Access the form**: Click "Contact Us" in the navigation bar of the system, or navigate directly to `Contact.html`
+
+2. **Fill out the required information**:
+   - **Name**: Your full name (required)
+   - **Return contact email**: Your email address for responses (optional but recommended)
+   - **Message**: Detailed description of your inquiry or issue (required)
+
+3. **Submit your message**: Click the submit button to send your inquiry
+
+4. **Confirmation**: You'll see a "New record created successfully" message when your inquiry is submitted
+
+### What Information to Include
+
+To help us assist you quickly, please include:
+
+- **Clear description**: Explain the issue or question in detail
+- **Steps to reproduce**: If reporting a bug, list the exact steps that led to the problem
+- **Error messages**: Include any error messages you received
+- **Browser and device**: Mention which browser and device you're using
+- **Screenshots**: If possible, attach screenshots (you can reference them in your message)
+- **Urgency level**: Indicate if this is an urgent issue affecting operations
+
+## Contact Form Fields
+
+The contact form accepts the following fields (based on the `Contact.php` implementation):
+
+<ParamField path="contactName" type="string" required>
+  Your full name
+</ParamField>
+
+<ParamField path="returnContact" type="email">
+  Your email address for receiving responses. While optional, providing an email ensures we can follow up with you directly.
+</ParamField>
+
+<ParamField path="message" type="text" required>
+  Detailed message describing your inquiry, issue, or feedback. The form provides a large text area (12 rows) for comprehensive descriptions.
+</ParamField>
+
+## Response Times
+
+- **General inquiries**: 1-2 business days
+- **Technical issues**: 4-8 hours during business hours
+- **Urgent/critical issues**: Contact your system administrator directly
+- **Password resets**: Contact your administrator for immediate assistance
+
+## Alternative Support Channels
+
+### System Administrator
+
+For immediate assistance or account-related issues, contact your school's system administrator directly:
+
+- Account access and password resets
+- Permission and role changes
+- Urgent technical problems affecting daily operations
+- Data backup and recovery requests
+
+### View Submitted Contacts
+
+Administrators can view all submitted contact inquiries through `ViewContact.php`, which displays:
+- Contact ID
+- Contact Name
+- Contact Email
+- Message content
+
+This ensures all support requests are tracked and addressed systematically.
+
+## Common Support Requests
+
+### Account Issues
+
+- **Forgotten passwords**: Contact your administrator for a password reset
+- **Locked accounts**: May occur after multiple failed login attempts - administrator intervention required
+- **Permission requests**: Submit via contact form with justification for needed access
+
+### Technical Problems
+
+- **Database connection errors**: See our [FAQ](/support/faq) for troubleshooting steps
+- **Form submission failures**: Check required fields and try again, or report via contact form
+- **Display issues**: Clear browser cache, try a different browser, or report the issue
+- **Performance problems**: Report specific pages or actions that are slow
+
+### Feature Requests
+
+- **New functionality**: Describe the feature and its benefits in your message
+- **Workflow improvements**: Explain current process and suggested enhancements
+- **Integration requests**: Specify systems or tools you'd like integrated
+
+### Data Management
+
+- **Bulk data imports**: Contact administrator for assistance with large data uploads
+- **Data corrections**: Identify specific records needing correction
+- **Report generation**: Request custom reports or data exports
+
+## Before Contacting Support
+
+To help resolve your issue quickly:
+
+1. **Check the FAQ**: Visit our [Frequently Asked Questions](/support/faq) page - many common issues are addressed there
+
+2. **Try basic troubleshooting**:
+   - Refresh the page
+   - Clear browser cache and cookies
+   - Try a different browser
+   - Check your internet connection
+
+3. **Gather information**: Note any error messages, the page where the issue occurred, and what you were trying to do
+
+4. **Verify credentials**: Ensure you're using the correct login information
+
+## System Status
+
+For information about scheduled maintenance, system updates, or known issues, check with your system administrator or watch for announcements on the system home page.
+
+## Emergency Contact
+
+For critical issues affecting school operations (such as complete system outages or data loss), bypass the contact form and reach out directly to your system administrator or IT department.
+
+---
+
+<Note>
+  All contact form submissions are stored securely in the database and reviewed by support staff. You can expect a response within the timeframes listed above.
+</Note>
+
+<Tip>
+  For the fastest resolution, be as specific as possible in your message and include all relevant details about your issue or inquiry.
+</Tip>

@@ -1,0 +1,203 @@
+---
+title: 'Adding Records'
+description: 'Step-by-step guide to adding new records to the school management system'
+---
+
+## Overview
+
+The school management system allows you to add various types of records including students, teachers, parents, classes, gym members, and salary information. Each record type has its own dedicated form with specific fields.
+
+## Accessing the Add Forms
+
+<Steps>
+  <Step title="Navigate to the Add Menu">
+    From the main navigation bar, click on the **Add** dropdown menu. This reveals options for all record types you can add.
+  </Step>
+
+  <Step title="Select Record Type">
+    Choose the type of record you want to add:
+    - Student
+    - Parent
+    - Teacher
+    - Class
+    - Gym Member
+    - Salary
+  </Step>
+</Steps>
+
+## Adding a Student
+
+Navigate to **Add > Student** (`AddStudent.html`) to access the student registration form.
+
+<Steps>
+  <Step title="Fill in Student Name">
+    Enter the student's first name in the **Student Name** field.
+    
+    ```
+    Field name: Sname
+    Type: text
+    Required: Yes
+    ```
+  </Step>
+
+  <Step title="Enter Student Lastname">
+    Enter the student's last name in the **Student Lastname** field.
+    
+    ```
+    Field name: Ssurname
+    Type: text
+    Required: Yes
+    ```
+  </Step>
+
+  <Step title="Enter Student Birthday">
+    Select the student's date of birth using the date picker. The date must not exceed 2023-04-06.
+    
+    ```
+    Field name: Sbirthday
+    Type: date
+    Required: Yes
+    Max date: 2023-04-06
+    ```
+  </Step>
+
+  <Step title="Enter Parent ID">
+    Provide the Parent ID to link the student to their parent record. This must be a valid existing parent ID.
+    
+    ```
+    Field name: Parent_ID
+    Type: text
+    Required: Yes
+    ```
+  </Step>
+
+  <Step title="Enter Class ID">
+    Provide the Class ID to assign the student to a class. This must be a valid existing class ID.
+    
+    ```
+    Field name: Class_ID
+    Type: text
+    Required: Yes
+    ```
+  </Step>
+
+  <Step title="Submit the Form">
+    Click the **Submit** button to add the student to the database. The form will be processed by `AddStudent.php`.
+  </Step>
+</Steps>
+
+## Adding a Teacher
+
+Navigate to **Add > Teacher** (`AddTeacher.html`) to access the teacher registration form.
+
+<Steps>
+  <Step title="Enter Teacher Information">
+    Fill in all required teacher fields:
+
+    | Field | HTML Name | Type | Required | Description |
+    |-------|-----------|------|----------|-------------|
+    | Teacher First Name | `Tname` | text | Yes | Teacher's first name |
+    | Teacher Last Name | `Tsurname` | text | Yes | Teacher's last name |
+    | Teacher Field | `teacher_field` | text | Yes | Subject or specialization |
+    | Teacher Address | `Taddress` | textarea | Yes | Full address (50 cols x 10 rows) |
+    | Teacher Mobile | `Tmobile` | tel | Yes | Contact phone number |
+    | Teacher Email | `Temail` | email | Yes | Email address |
+    | Bonus Amount | `bonus_amount` | text | No | Optional bonus amount |
+  </Step>
+
+  <Step title="Submit the Form">
+    Click the **Submit** button to add the teacher record. The data will be processed by `AddTeacher.php`.
+  </Step>
+</Steps>
+
+## Adding a Parent
+
+Navigate to **Add > Parent** (`AddParent.html`) to register a new parent.
+
+<Steps>
+  <Step title="Enter Parent Information">
+    Complete the parent registration form:
+
+    | Field | HTML Name | Type | Required | Description |
+    |-------|-----------|------|----------|-------------|
+    | Parent First Name | `Pname` | text | Yes | Parent's first name |
+    | Parent Last Name | `Psurname` | text | Yes | Parent's last name |
+    | Parent Address | `Paddress` | textarea | Yes | Full address (50 cols x 10 rows) |
+    | Parent Email | `Pemail` | email | No | Email address (optional) |
+  </Step>
+
+  <Step title="Submit the Form">
+    Click the **Submit** button to create the parent record via `AddParent.php`.
+  </Step>
+</Steps>
+
+## Adding a Class
+
+Navigate to **Add > Class** (`AddClass.html`) to create a new class.
+
+<Steps>
+  <Step title="Enter Class Details">
+    Fill in the class information:
+
+    | Field | HTML Name | Type | Required | Description |
+    |-------|-----------|------|----------|-------------|
+    | Class Name | `classYear` | text | Yes | Name or identifier for the class |
+    | Class Capacity | `capacity` | number | Yes | Maximum number of students (min: 1) |
+    | Teacher ID | `Teacher_ID` | text | Yes | ID of assigned teacher |
+  </Step>
+
+  <Step title="Submit the Form">
+    Click the **Submit** button to create the class record. The form submits to `AddClass.php`.
+  </Step>
+</Steps>
+
+## Adding a Salary Record
+
+Navigate to **Add > Salary** (`AddSalary.html`) to add salary information for a teacher.
+
+<Steps>
+  <Step title="Enter Salary Information">
+    Complete the salary form:
+
+    | Field | HTML Name | Type | Required | Description |
+    |-------|-----------|------|----------|-------------|
+    | Teacher ID | `Teacher_ID` | text | Yes | ID of the teacher |
+    | Salary Amount | `salary_amount` | text | Yes | Salary amount |
+    | Working Type | `workingTimes` | select | Yes | Part-Time or Full-Time |
+  </Step>
+
+  <Step title="Select Working Type">
+    Choose the employment type from the dropdown:
+    - **Part-Time** (value: `partTime`)
+    - **Full-Time** (value: `fullTime`)
+  </Step>
+
+  <Step title="Submit the Form">
+    Click the **Submit** button to save the salary record via `AddSalary.php`.
+  </Step>
+</Steps>
+
+## Important Notes
+
+<Info>
+  - All fields marked with an asterisk (*) or specified as required must be completed
+  - Parent ID and Class ID fields must reference existing records in the database
+  - Date fields use a date picker for accurate entry
+  - Email fields validate proper email format
+  - Phone fields (tel type) expect valid phone numbers
+</Info>
+
+<Warning>
+  - Always verify that Parent IDs and Class IDs exist before assigning them to students
+  - Ensure Teacher IDs are valid when creating classes or salary records
+  - Double-check all information before submitting to avoid data entry errors
+</Warning>
+
+## Common Workflow
+
+1. **Add Parents first** - Create parent records before adding students
+2. **Add Teachers** - Register teachers in the system
+3. **Add Classes** - Create classes and assign teachers
+4. **Add Students** - Register students and link to parents and classes
+5. **Add Salaries** - Record teacher salary information
+6. **Add Gym Members** - Register gym membership information (via `AddGymMember.php`)

@@ -1,0 +1,192 @@
+---
+title: Database Setup and Configuration
+description: Learn how to configure and establish database connections for the school management system
+---
+
+## Database Connection
+
+The school management system uses MySQLi (MySQL Improved Extension) to connect to the database. All PHP files establish a connection using the same connection parameters.
+
+### Basic Connection Example
+
+```php
+<?php
+$link = mysqli_connect("sdb-57.hosting.stackcp.net", "student84-353031351c89", "ua92-studentAc", "student84-353031351c89");
+
+// Check connection
+if ($link === false) {
+    die("Connection failed: ");
+}
+?>
+```
+
+This pattern is used across multiple files including:
+- `AddStudent.php:10`
+- `AddTeacher.php:4`
+- `ViewStudent.php:140`
+- `DeleteStudent.php:2`
+
+### Connection Parameters
+
+The `mysqli_connect()` function accepts four parameters:
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| **host** | `sdb-57.hosting.stackcp.net` | Database server hostname |
+| **username** | `student84-353031351c89` | Database username |
+| **password** | `ua92-studentAc` | Database password |
+| **database** | `student84-353031351c89` | Database name |
+
+### Alternative Connection Syntax
+
+Some files use a variable named `$connection` instead of `$link`:
+
+```php
+<?php
+$connection = mysqli_connect("sdb-57.hosting.stackcp.net","student84-353031351c89","ua92-studentAc","student84-353031351c89");
+
+// Checking connection here
+if($connection === false){
+    die("Connection failed: ");
+}
+?>
+```
+
+Seen in:
+- `admin_login.php:134`
+- `DeleteStudent.php:2`
+
+## Connection Best Practices
+
+### Error Handling
+
+Always check if the connection was successful before executing queries:
+
+```php
+if ($link === false) {
+    die("Connection failed: ");
+}
+```
+
+<Warning>
+**Production Warning**: The current error handling doesn't expose detailed error information. While this is good for security, it makes debugging difficult. Consider logging errors to a file instead of displaying them to users.
+</Warning>
+
+### Connection Reusability
+
+The current implementation creates a new connection in each PHP file. For better performance, consider:
+
+1. Creating a separate connection file (e.g., `db_config.php`)
+2. Including it in all files that need database access
+3. Reusing the connection object
+
+**Example `db_config.php`:**
+
+```php
+<?php
+// Database configuration
+define('DB_HOST', 'sdb-57.hosting.stackcp.net');
+define('DB_USER', 'student84-353031351c89');
+define('DB_PASS', 'ua92-studentAc');
+define('DB_NAME', 'student84-353031351c89');
+
+// Create connection
+$link = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+// Check connection
+if ($link === false) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+?>
+```
+
+**Usage in other files:**
+
+```php
+<?php
+require_once 'db_config.php';
+// Now $link is available for queries
+?>
+```
+
+### Closing Connections
+
+<Note>
+None of the current PHP files explicitly close database connections. While PHP automatically closes connections at the end of script execution, explicitly closing them is a best practice:
+
+```php
+mysqli_close($link);
+```
+</Note>
+
+## Environment-Specific Configuration
+
+Currently, database credentials are hardcoded in the source files. For better security and flexibility:
+
+### Use Environment Variables
+
+```php
+<?php
+$link = mysqli_connect(
+    getenv('DB_HOST'),
+    getenv('DB_USER'),
+    getenv('DB_PASS'),
+    getenv('DB_NAME')
+);
+?>
+```
+
+### Use Configuration Files
+
+Store credentials in a configuration file outside the web root:
+
+```php
+<?php
+$config = parse_ini_file('/path/to/config.ini');
+$link = mysqli_connect(
+    $config['db_host'],
+    $config['db_user'],
+    $config['db_pass'],
+    $config['db_name']
+);
+?>
+```
+
+## Testing the Connection
+
+You can verify the database connection is working:
+
+```php
+<?php
+$link = mysqli_connect("sdb-57.hosting.stackcp.net", "student84-353031351c89", "ua92-studentAc", "student84-353031351c89");
+
+if ($link === false) {
+    die("Connection failed: " . mysqli_connect_error());
+}
+
+echo "Connected successfully to database: " . mysqli_get_host_info($link);
+
+mysqli_close($link);
+?>
+```
+
+## Character Set and Collation
+
+For proper handling of international characters, set the connection character set:
+
+```php
+<?php
+$link = mysqli_connect("sdb-57.hosting.stackcp.net", "student84-353031351c89", "ua92-studentAc", "student84-353031351c89");
+
+if ($link === false) {
+    die("Connection failed: ");
+}
+
+// Set character set to utf8
+mysqli_set_charset($link, "utf8mb4");
+?>
+```
+
+<Info>
+UTF8MB4 is recommended over UTF8 as it supports the full range of Unicode characters including emojis and special symbols.
+</Info>

@@ -1,0 +1,235 @@
+---
+title: 'Teacher Management'
+description: 'Manage teacher profiles, contact information, specializations, and bonus compensation'
+---
+
+## Overview
+
+The Teacher Management system allows administrators to maintain detailed teacher profiles including their specialization areas, contact information, and bonus compensation details.
+
+<CardGroup cols={2}>
+  <Card title="Add Teachers" icon="chalkboard-user">
+    Register new teachers with complete professional details
+  </Card>
+  <Card title="View Profiles" icon="address-card">
+    Access comprehensive teacher information in table format
+  </Card>
+  <Card title="Update Records" icon="user-pen">
+    Modify teacher information and compensation
+  </Card>
+  <Card title="Remove Teachers" icon="user-xmark">
+    Delete teacher records from the system
+  </Card>
+</CardGroup>
+
+## Adding a Teacher
+
+Register new teachers with comprehensive professional and contact information.
+
+### Required Information
+
+<AccordionGroup>
+  <Accordion title="Bonus Amount">
+    Additional compensation amount for the teacher (text field, optional)
+    
+    **Form Field:** `bonus_amount`
+    
+    <Info>Leave blank if no bonus is applicable</Info>
+  </Accordion>
+  
+  <Accordion title="Teacher Field">
+    Area of specialization or subject expertise (text field, required)
+    
+    **Form Field:** `teacher_field`
+    
+    Examples: Mathematics, Science, English, Physical Education
+  </Accordion>
+  
+  <Accordion title="Teacher First Name">
+    Teacher's first name (text field, required)
+    
+    **Form Field:** `Tname`
+  </Accordion>
+  
+  <Accordion title="Teacher Last Name">
+    Teacher's last name (text field, required)
+    
+    **Form Field:** `Tsurname`
+  </Accordion>
+  
+  <Accordion title="Teacher Address">
+    Complete residential address (textarea, 50 cols × 10 rows, required)
+    
+    **Form Field:** `Taddress`
+    
+    Provide full address including street, city, postal code
+  </Accordion>
+  
+  <Accordion title="Teacher Mobile">
+    Contact phone number (tel input, required)
+    
+    **Form Field:** `Tmobile`
+    
+    <Note>Format validation for telephone numbers is applied</Note>
+  </Accordion>
+  
+  <Accordion title="Teacher Email">
+    Professional email address (email input, required)
+    
+    **Form Field:** `Temail`
+    
+    <Note>Email format validation is automatically applied</Note>
+  </Accordion>
+</AccordionGroup>
+
+### Database Operation
+
+When submitting a new teacher record:
+
+```php
+INSERT INTO Teacher (bonus_amount, teacher_field, Tname, Tsurname, Taddress, Tmobile, Temail) 
+VALUES ('$bonus_amount', '$teacher_field', '$Tname', '$Tsurname', '$Taddress', '$Tmobile', '$Temail')
+```
+
+<Note>
+  **System Response:**
+  - Success: "New record created successfully"
+  - Error: "Error adding record"
+</Note>
+
+## Viewing Teacher Records
+
+Access a comprehensive table view of all teacher information in the system.
+
+### Display Columns
+
+| Column | Description | Field Name |
+|--------|-------------|------------|
+| **Teacher ID** | Unique identifier (auto-generated) | Teacher_ID |
+| **Bonus Amount** | Additional compensation | bonus_amount |
+| **Teacher Field** | Area of specialization | teacher_field |
+| **First Name** | Teacher's first name | Tname |
+| **Last Name** | Teacher's last name | Tsurname |
+| **Address** | Residential address | Taddress |
+| **Mobile** | Contact phone number | Tmobile |
+| **Email** | Email address | Temail |
+
+### Database Query
+
+```php
+SELECT Teacher_ID, bonus_amount, teacher_field, Tname, Tsurname, Taddress, Tmobile, Temail 
+FROM Teacher
+```
+
+All records are displayed in a searchable, scrollable table format for easy reference.
+
+## Updating Teacher Information
+
+Modify existing teacher records including personal information and compensation details.
+
+### Update Process
+
+<Steps>
+  <Step title="Identify Teacher">
+    Enter the Teacher ID to locate the record you want to update
+  </Step>
+  
+  <Step title="Provide New Information">
+    Fill in the fields you want to update:
+    - Bonus amount
+    - Teacher field/specialization
+    - Name (first and last)
+    - Address
+    - Mobile number
+    - Email address
+  </Step>
+  
+  <Step title="Submit Changes">
+    The system updates the teacher record with the new information
+  </Step>
+</Steps>
+
+<Note>
+  All fields in the update form are validated the same way as the add form, ensuring data consistency.
+</Note>
+
+## Deleting a Teacher
+
+Remove a teacher record from the system permanently.
+
+### Deletion Steps
+
+1. Navigate to the **Delete Teacher** page
+2. Enter the **Teacher ID** of the record to delete
+3. Submit the form
+
+<Warning>
+  **Important Considerations:**
+  - This action is permanent and cannot be reversed
+  - Verify the Teacher ID before deletion
+  - Check if the teacher is assigned to any classes before removing
+</Warning>
+
+### Database Operation
+
+```php
+DELETE FROM Teacher 
+WHERE Teacher_ID = $Teacher_ID
+```
+
+## Database Schema
+
+The `Teacher` table structure:
+
+```sql
+Table: Teacher
+- Teacher_ID (Primary Key, Auto-increment)
+- bonus_amount (DECIMAL/VARCHAR)
+- teacher_field (VARCHAR)
+- Tname (VARCHAR)
+- Tsurname (VARCHAR)
+- Taddress (TEXT)
+- Tmobile (VARCHAR)
+- Temail (VARCHAR)
+```
+
+## Professional Information Management
+
+<CardGroup cols={2}>
+  <Card title="Specialization Tracking" icon="graduation-cap">
+    Record teacher expertise areas for proper class assignment
+  </Card>
+  <Card title="Contact Management" icon="phone">
+    Maintain up-to-date contact information for communication
+  </Card>
+  <Card title="Compensation Records" icon="dollar-sign">
+    Track bonus amounts for payroll processing
+  </Card>
+  <Card title="Address Verification" icon="location-dot">
+    Keep residential addresses current for official correspondence
+  </Card>
+</CardGroup>
+
+## Best Practices
+
+<Steps>
+  <Step title="Verify Email Addresses">
+    Ensure email addresses are valid and active for system communications
+  </Step>
+  
+  <Step title="Complete Specialization Details">
+    Clearly specify the teacher's field for accurate class assignments
+  </Step>
+  
+  <Step title="Update Contact Information">
+    Regularly verify and update mobile numbers and addresses
+  </Step>
+  
+  <Step title="Document Bonus Structure">
+    Maintain clear records of bonus amounts for transparency
+  </Step>
+</Steps>
+
+<Info>
+  Teacher records are referenced by Class and Salary management systems. Ensure all related records are updated before deleting a teacher.
+</Info>

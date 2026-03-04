@@ -1,0 +1,406 @@
+---
+title: Installation & Configuration
+description: Complete guide to installing and configuring the Rishton Academy School Management System
+---
+
+## System Requirements
+
+Before installing the School Management System, ensure your environment meets these requirements:
+
+<CardGroup cols={2}>
+  <Card title="Web Server" icon="server">
+    Apache 2.4+ or Nginx
+  </Card>
+  <Card title="PHP" icon="php">
+    PHP 7.4 or higher with mysqli extension
+  </Card>
+  <Card title="Database" icon="database">
+    MySQL 5.7+ or MariaDB 10.2+
+  </Card>
+  <Card title="Browser" icon="window">
+    Modern browser (Chrome, Firefox, Safari, Edge)
+  </Card>
+</CardGroup>
+
+## Installation Steps
+
+<Steps>
+  <Step title="Download and Extract Files">
+    Extract all project files to your web server's document root:
+
+    ```bash
+    # For Apache on Linux
+    cd /var/www/html/rishton-academy
+
+    # For XAMPP on Windows
+    cd C:\xampp\htdocs\rishton-academy
+
+    # For MAMP on macOS
+    cd /Applications/MAMP/htdocs/rishton-academy
+    ```
+
+    Ensure the following files are present:
+    - `index.html` - Main dashboard
+    - `AddStudent.php`, `AddTeacher.php`, `AddClass.php`, etc.
+    - `ViewStudent.php`, `ViewTeacher.php`, etc.
+    - `DeleteStudent.php`, `DeleteTeacher.php`, etc.
+    - `UptadeStudent.php`, `UptadeTeacher.php`, etc.
+    - `admin_login.php` - Admin authentication
+  </Step>
+
+  <Step title="Configure Database Connection">
+    The system uses a consistent database configuration across all PHP files. Update the connection parameters:
+
+    ```php
+    // Standard connection format used throughout the system
+    $link = mysqli_connect(
+        "your-database-host",     // e.g., "localhost" or "sdb-57.hosting.stackcp.net"
+        "your-username",          // e.g., "student84-353031351c89"
+        "your-password",          // e.g., "ua92-studentAc"
+        "your-database-name"      // e.g., "student84-353031351c89"
+    );
+    
+    // Check connection
+    if ($link === false) {
+        die("Connection failed: ");
+    }
+    ```
+
+    <Warning>
+      You need to update the database credentials in **every PHP file** that contains a database connection. Files to update include:
+      - `admin_login.php`
+      - `AddStudent.php`, `AddTeacher.php`, `AddClass.php`, `AddParent.php`, `AddGymMember.php`, `AddSalary.php`
+      - `ViewStudent.php`, `ViewTeacher.php`, `ViewClass.php`, `ViewParent.php`, `ViewContact.php`, `ViewGymMember.php`, `ViewSalary.php`
+      - `DeleteStudent.php`, `DeleteTeacher.php`, `DeleteClass.php`, `DeleteParent.php`, `DeleteGymMember.php`, `DeleteSalary.php`
+      - `UptadeStudent.php`, `UptadeTeacher.php`, `UptadeClass.php`, `UptadeParent.php`, `UptadeGym.php`, `UptadeSalary.php`
+    </Warning>
+  </Step>
+
+  <Step title="Create Database Schema">
+    Create the required database tables. Based on the system's code, you need these tables:
+
+    <CodeGroup>
+    ```sql Student1 Table
+    CREATE TABLE Student1 (
+        Sid INT AUTO_INCREMENT PRIMARY KEY,
+        Sname VARCHAR(100) NOT NULL,
+        Ssurname VARCHAR(100) NOT NULL,
+        Sbirthday DATE NOT NULL,
+        Parent_ID INT,
+        Class_ID INT,
+        FOREIGN KEY (Parent_ID) REFERENCES Parent(Parent_ID),
+        FOREIGN KEY (Class_ID) REFERENCES Class(Class_ID)
+    );
+    ```
+
+    ```sql Teacher Table
+    CREATE TABLE Teacher (
+        Teacher_ID INT AUTO_INCREMENT PRIMARY KEY,
+        bonus_amount DECIMAL(10,2),
+        teacher_field VARCHAR(100),
+        Tname VARCHAR(100) NOT NULL,
+        Tsurname VARCHAR(100) NOT NULL,
+        Taddress TEXT,
+        Tmobile VARCHAR(20),
+        Temail VARCHAR(100)
+    );
+    ```
+
+    ```sql Class Table
+    CREATE TABLE Class (
+        Class_ID INT AUTO_INCREMENT PRIMARY KEY,
+        classYear VARCHAR(50),
+        capacity INT,
+        Teacher_ID INT,
+        FOREIGN KEY (Teacher_ID) REFERENCES Teacher(Teacher_ID)
+    );
+    ```
+
+    ```sql Parent Table
+    CREATE TABLE Parent (
+        Parent_ID INT AUTO_INCREMENT PRIMARY KEY,
+        Pname VARCHAR(100) NOT NULL,
+        Psurname VARCHAR(100) NOT NULL,
+        Paddress TEXT,
+        Pmobile VARCHAR(20),
+        Pemail VARCHAR(100)
+    );
+    ```
+
+    ```sql Admin Login Table
+    CREATE TABLE admin_login (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        admin_user VARCHAR(50) NOT NULL UNIQUE,
+        admin_pass VARCHAR(255) NOT NULL
+    );
+    ```
+    </CodeGroup>
+
+    <Note>
+      Additional tables for `GymMember`, `Salary`, and `Contact` are also referenced in the system's navigation.
+    </Note>
+  </Step>
+
+  <Step title="Set Up Admin Access">
+    The system includes an admin login panel. Insert an admin user into the database:
+
+    ```sql
+    INSERT INTO admin_login (admin_user, admin_pass) 
+    VALUES ('admin', 'your-secure-password');
+    ```
+
+    Access the admin panel at:
+    ```bash
+    http://localhost/rishton-academy/admin_login.php
+    ```
+
+    The login form uses this PHP logic:
+    ```php
+    if (isset($_POST['submit'])) {
+        $query = "SELECT * FROM `admin_login` 
+                  WHERE admin_user=$_POST['admin_user'] 
+                  AND admin_pass=$_POST['admin_pass']";
+        $result = mysqli_query($connection, $query);
+        
+        if (mysqli_num_rows($result) == 1) {
+            echo "correct."; 
+        } else {
+            echo "incorrect.";
+        }
+    }
+    ```
+
+    <Warning>
+      The current authentication system stores passwords in plain text. For production use, implement password hashing using `password_hash()` and `password_verify()`.
+    </Warning>
+  </Step>
+
+  <Step title="Configure File Permissions">
+    Set appropriate permissions for security:
+
+    ```bash
+    # For Linux/Unix systems
+    chmod 644 *.php *.html
+    chmod 755 .
+    
+    # Ensure web server can read files
+    chown -R www-data:www-data /var/www/html/rishton-academy
+    ```
+  </Step>
+
+  <Step title="Test the Installation">
+    Verify your installation by testing core functionality:
+
+    1. **Access the dashboard:**
+       ```bash
+       http://localhost/rishton-academy/index.html
+       ```
+
+    2. **Test database connection:**
+       Access any View page (e.g., `ViewStudent.php`) to verify database connectivity.
+
+    3. **Add a test record:**
+       Navigate to Add > Student and create a test entry.
+
+    4. **Verify CRUD operations:**
+       - Create: Add a new student
+       - Read: View the student list
+       - Update: Modify the student details
+       - Delete: Remove the test student
+  </Step>
+</Steps>
+
+## Configuration Details
+
+### Database Connection Pattern
+
+Every PHP file in the system follows this connection pattern:
+
+<CodeGroup>
+```php Standard Connection (Most Files)
+$link = mysqli_connect(
+    "sdb-57.hosting.stackcp.net", 
+    "student84-353031351c89", 
+    "ua92-studentAc", 
+    "student84-353031351c89"
+);
+
+if ($link === false) {
+    die("Connection failed: ");
+}
+```
+
+```php Alternative Connection (Some Files)
+$connection = mysqli_connect(
+    "sdb-57.hosting.stackcp.net",
+    "student84-353031351c89",
+    "ua92-studentAc",
+    "student84-353031351c89"
+);
+
+if ($connection === false) {
+    die("Connection failed: ");
+}
+```
+</CodeGroup>
+
+<Note>
+  Note that some files use `$link` and others use `$connection` as the variable name. Keep this consistent when updating credentials.
+</Note>
+
+### Navigation Structure
+
+The system uses a dropdown navigation menu defined in each HTML/PHP file:
+
+```html
+<div class="navbar">
+    <a href="index.html">Home</a>
+    <div class="dropdown">
+        <button class="dropbtn">View
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <a href="ViewStudent.php">Student</a>
+            <a href="ViewParent.php">Parent</a>
+            <a href="ViewTeacher.php">Teacher</a>
+            <a href="ViewClass.php">Class</a>
+            <a href="ViewContact.php">Contact</a>
+            <a href="ViewGymMember.php">Gym</a>
+            <a href="ViewSalary.php">Salary</a>
+        </div>
+    </div>
+    <!-- Similar structure for Add, Delete, Update dropdowns -->
+    <a href="Contact.html">Contact Us</a>
+</div>
+```
+
+### Form Processing Pattern
+
+All forms follow this processing pattern:
+
+```php
+// Check if form was submitted
+if (isset($_POST['submit'])) {
+    // Retrieve form data
+    $field1 = $_POST['field1'];
+    $field2 = $_POST['field2'];
+    
+    // Construct SQL query
+    $sql = "INSERT INTO TableName (field1, field2) VALUES ('$field1', '$field2')";
+    
+    // Execute query and provide feedback
+    if (mysqli_query($link, $sql)) {
+        echo "New record created successfully";
+    } else {
+        echo "Error adding record ";
+    }
+}
+```
+
+## Security Considerations
+
+<Warning>
+  The current implementation has several security vulnerabilities that should be addressed before production use:
+</Warning>
+
+### SQL Injection Prevention
+
+The system currently uses direct variable insertion in SQL queries. Implement prepared statements:
+
+```php
+// Current vulnerable code
+$sql = "INSERT INTO Student1 (Sname,Ssurname) VALUES ('$Sname','$Ssurname')";
+
+// Secure alternative with prepared statements
+$stmt = $link->prepare("INSERT INTO Student1 (Sname,Ssurname) VALUES (?, ?)");
+$stmt->bind_param("ss", $Sname, $Ssurname);
+$stmt->execute();
+```
+
+### Password Security
+
+Implement proper password hashing:
+
+```php
+// During registration/password creation
+$hashed_password = password_hash($admin_pass, PASSWORD_DEFAULT);
+
+// During login verification
+if (password_verify($submitted_password, $stored_hash)) {
+    // Password is correct
+}
+```
+
+### Input Validation
+
+Add server-side validation:
+
+```php
+// Sanitize inputs
+$Sname = mysqli_real_escape_string($link, trim($_POST['Sname']));
+$Semail = filter_var($_POST['Semail'], FILTER_SANITIZE_EMAIL);
+
+// Validate email
+if (!filter_var($Semail, FILTER_VALIDATE_EMAIL)) {
+    die("Invalid email format");
+}
+```
+
+## Troubleshooting
+
+### Connection Failed Error
+
+If you see "Connection failed:", check:
+
+1. MySQL service is running
+   ```bash
+   # Linux
+   sudo systemctl status mysql
+   
+   # Windows XAMPP
+   # Check XAMPP Control Panel
+   ```
+
+2. Database credentials are correct
+3. Database exists and is accessible
+4. PHP mysqli extension is enabled
+   ```bash
+   php -m | grep mysqli
+   ```
+
+### Records Not Displaying
+
+If View pages show empty tables:
+
+1. Verify table names match exactly (case-sensitive)
+2. Check that database has data:
+   ```sql
+   SELECT COUNT(*) FROM Student1;
+   ```
+3. Review browser console for JavaScript errors
+
+### Form Submission Issues
+
+If forms don't submit properly:
+
+1. Verify form `method="post"` is set
+2. Check that submit button has `name="submit"`
+3. Ensure PHP file path in form `action` is correct
+4. Review PHP error logs
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Quick Start Guide" icon="rocket" href="/quickstart">
+    Learn basic operations and workflows
+  </Card>
+  <Card title="Database Management" icon="database">
+    Advanced database configuration and optimization
+  </Card>
+  <Card title="User Management" icon="users">
+    Managing students, teachers, and parents
+  </Card>
+  <Card title="Security Hardening" icon="shield-halved">
+    Best practices for securing your installation
+  </Card>
+</CardGroup>

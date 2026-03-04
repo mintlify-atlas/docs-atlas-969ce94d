@@ -1,0 +1,339 @@
+---
+title: 'Deleting Records'
+description: 'Learn how to safely delete records from the school management system'
+---
+
+## Overview
+
+The Delete section allows you to permanently remove records from the school management system. This includes students, teachers, parents, classes, gym members, and salary records.
+
+<Warning>
+  **Deletion is permanent!** 
+  
+  Once a record is deleted, it cannot be recovered. Always verify you have the correct ID before deleting, and consider the impact on related records.
+</Warning>
+
+## Accessing Delete Forms
+
+<Steps>
+  <Step title="Navigate to the Delete Menu">
+    From the main navigation bar, click on the **Delete** dropdown menu to see all available record types.
+  </Step>
+
+  <Step title="Select Record Type">
+    Choose the type of record you want to delete:
+    - Student
+    - Parent
+    - Teacher
+    - Class
+    - Gym
+    - Salary
+  </Step>
+</Steps>
+
+## Deleting a Student Record
+
+Navigate to **Delete > Student** (`DeleteStudent.html`) to remove a student from the system.
+
+<Steps>
+  <Step title="Verify the Student ID">
+    Before deleting, use **View > Student** to verify you have the correct student ID and confirm this is the record you want to delete.
+  </Step>
+
+  <Step title="Access the Delete Page">
+    Navigate to **Delete > Student**. You'll see a page titled "Delete Student Page."
+  </Step>
+
+  <Step title="Enter the Student ID">
+    In the form, type the ID of the student to be deleted.
+    
+    ```
+    Field name: Sid
+    Type: text
+    Required: Yes
+    ```
+    
+    The form label states: "Type ID of student to be deleted."
+  </Step>
+
+  <Step title="Submit the Deletion">
+    Click the **Delete** button (the submit button shows "Delete." as its value). The form submits to `DeleteStudent.php` for processing.
+  </Step>
+
+  <Step title="Confirm Deletion">
+    The system will remove the student record from the database. The record will no longer appear in the student view list.
+  </Step>
+</Steps>
+
+### Student Delete Form
+
+| Field | HTML Name | Type | Description |
+|-------|-----------|------|-------------|
+| Student ID | `Sid` | text | ID of the student to delete |
+
+## Deleting a Teacher Record
+
+Navigate to **Delete > Teacher** (`DeleteTeacher.html`) to remove a teacher from the system.
+
+<Steps>
+  <Step title="Check Dependencies">
+    Before deleting a teacher:
+    1. Use **View > Class** to check if the teacher is assigned to any classes
+    2. Use **View > Salary** to check for salary records linked to this teacher
+    3. Consider reassigning classes before deletion
+  </Step>
+
+  <Step title="Access the Delete Page">
+    Navigate to **Delete > Teacher**.
+  </Step>
+
+  <Step title="Enter the Teacher ID">
+    Type the ID of the teacher you want to delete.
+  </Step>
+
+  <Step title="Submit the Deletion">
+    Click the **Delete** button. The form submits to `DeleteTeacher.php`.
+  </Step>
+</Steps>
+
+<Warning>
+  Deleting a teacher may affect:
+  - Classes assigned to this teacher (may become unassigned)
+  - Salary records associated with this teacher
+  - Historical data and reports
+</Warning>
+
+## Deleting a Parent Record
+
+Navigate to **Delete > Parent** (`DeleteParent.html`) to remove a parent from the system.
+
+<Steps>
+  <Step title="Check for Associated Students">
+    Before deleting a parent:
+    1. Use **View > Student** to find all students linked to this Parent_ID
+    2. Either delete those students first, or reassign them to another parent
+  </Step>
+
+  <Step title="Access the Delete Page">
+    Navigate to **Delete > Parent**.
+  </Step>
+
+  <Step title="Enter the Parent ID">
+    Type the ID of the parent record to delete.
+  </Step>
+
+  <Step title="Submit the Deletion">
+    Click the **Delete** button. The form submits to `DeleteParent.php`.
+  </Step>
+</Steps>
+
+<Warning>
+  Deleting a parent may leave students without a valid Parent_ID reference. Check for dependent student records before proceeding.
+</Warning>
+
+## Deleting a Class Record
+
+Navigate to **Delete > Class** (`DeleteClass.html`) to remove a class from the system.
+
+<Steps>
+  <Step title="Check Class Enrollment">
+    Before deleting a class:
+    1. Use **View > Student** to find all students assigned to this Class_ID
+    2. Either move students to another class or delete them first
+  </Step>
+
+  <Step title="Access the Delete Page">
+    Navigate to **Delete > Class**.
+  </Step>
+
+  <Step title="Enter the Class ID">
+    Type the ID of the class to delete.
+  </Step>
+
+  <Step title="Submit the Deletion">
+    Click the **Delete** button. The form submits to `DeleteClass.php`.
+  </Step>
+</Steps>
+
+<Warning>
+  Deleting a class will affect:
+  - All students assigned to this class (they will lose their class assignment)
+  - The teacher's workload and class assignments
+  - Enrollment capacity calculations
+</Warning>
+
+## Deleting a Gym Member
+
+Navigate to **Delete > Gym** (`DeleteGymMember.html`) to remove a gym member.
+
+<Steps>
+  <Step title="Verify Membership Status">
+    Use **View > Gym** to confirm the gym member ID and review their membership details.
+  </Step>
+
+  <Step title="Access the Delete Page">
+    Navigate to **Delete > Gym**.
+  </Step>
+
+  <Step title="Enter the Gym Member ID">
+    Type the ID of the gym member to delete.
+  </Step>
+
+  <Step title="Submit the Deletion">
+    Click the **Delete** button. The form submits to `DeleteGymMember.php`.
+  </Step>
+</Steps>
+
+## Deleting a Salary Record
+
+Navigate to **Delete > Salary** (`DeleteSalary.html`) to remove salary information.
+
+<Steps>
+  <Step title="Verify Salary Record">
+    Use **View > Salary** to confirm the correct salary record ID and review the details.
+  </Step>
+
+  <Step title="Access the Delete Page">
+    Navigate to **Delete > Salary**.
+  </Step>
+
+  <Step title="Enter the Salary ID">
+    Type the ID of the salary record to delete.
+  </Step>
+
+  <Step title="Submit the Deletion">
+    Click the **Delete** button. The form submits to `DeleteSalary.php`.
+  </Step>
+</Steps>
+
+<Note>
+  Deleting a salary record does not delete the teacher. It only removes the salary information. The teacher record will remain in the system.
+</Note>
+
+## Best Practices for Deletion
+
+<Info>
+  ### Pre-Deletion Checklist
+  
+  1. **Verify the ID** - Use the View pages to confirm you have the correct record ID
+  2. **Check dependencies** - Look for related records that reference this ID
+  3. **Document the reason** - Keep notes on why the record is being deleted
+  4. **Consider archiving** - For important records, consider marking as inactive instead of deleting
+  5. **Double-check** - Confirm you're deleting the intended record, not a similar one
+</Info>
+
+## Understanding Data Relationships
+
+### Student Dependencies
+When deleting a student:
+- The student references a Parent_ID
+- The student references a Class_ID
+- Deleting the student removes these references but doesn't affect the parent or class
+
+### Parent Dependencies
+When deleting a parent:
+- Multiple students may reference this Parent_ID
+- Those students will have invalid Parent_ID references after deletion
+- Consider updating or deleting dependent students first
+
+### Teacher Dependencies
+When deleting a teacher:
+- Classes may reference this Teacher_ID
+- Salary records may reference this Teacher_ID
+- Those records will have invalid Teacher_ID references after deletion
+
+### Class Dependencies
+When deleting a class:
+- Multiple students may reference this Class_ID
+- Those students will have invalid Class_ID references after deletion
+- Consider reassigning students before deleting the class
+
+## Common Deletion Scenarios
+
+### Scenario 1: Student Graduation/Transfer
+1. Use **View > Student** to locate the student by name
+2. Note the student's Sid (student ID)
+3. Navigate to **Delete > Student**
+4. Enter the Sid
+5. Click **Delete** to remove the record
+
+### Scenario 2: Teacher Departure
+1. Use **View > Teacher** to find the teacher's Teacher_ID
+2. Navigate to **View > Class** and reassign any classes to other teachers
+3. Navigate to **View > Salary** and note any salary records
+4. Delete the salary record first via **Delete > Salary**
+5. Finally, delete the teacher via **Delete > Teacher**
+
+### Scenario 3: Class Discontinuation
+1. Use **View > Class** to confirm the Class_ID
+2. Navigate to **View > Student** to find all students in this class
+3. Reassign students to other classes via **Uptade > Student**
+4. Once all students are reassigned, delete the class via **Delete > Class**
+
+### Scenario 4: Parent Record Cleanup
+1. Use **View > Parent** to locate the parent record
+2. Navigate to **View > Student** to check for any children linked to this Parent_ID
+3. If children exist, either delete them or update their Parent_ID to another parent
+4. Once no dependencies exist, delete the parent via **Delete > Parent**
+
+## Delete Page Navigation
+
+All delete pages maintain consistent navigation:
+
+- **Home** - Return to the main page
+- **View** - Access record lists to verify IDs
+- **Add** - Create new records
+- **Delete** - Switch between deletion pages
+- **Uptade** - Update records instead of deleting
+- **Contact Us** - Access support
+
+## Form Structure
+
+All delete forms follow the same simple pattern:
+
+```html
+<form method="post" action="DeleteX.php">
+  <label>Type ID of [record type] to be deleted.</label>
+  <input type="text" name="[ID_field]">
+  <input type="submit" name="submit" value="Delete.">
+</form>
+```
+
+Where:
+- `DeleteX.php` is the processing script for that record type
+- `[ID_field]` is the ID field name (e.g., Sid, Teacher_ID, Parent_ID)
+- The submit button displays "Delete." as confirmation
+
+## Error Prevention
+
+<Warning>
+  ### Common Mistakes to Avoid
+  
+  1. **Wrong ID** - Deleting the wrong record because of a typo
+  2. **Cascading issues** - Not checking for dependent records first
+  3. **No backup** - Deleting without having a backup of the data
+  4. **Bulk deletion** - Deleting multiple related records without planning
+  5. **Incomplete cleanup** - Leaving orphaned references in related tables
+</Warning>
+
+## Recovery Options
+
+<Note>
+  The system does not have a built-in undo feature for deletions. Once you click Delete and the form is submitted:
+  
+  - The record is permanently removed from the database
+  - You cannot recover the deleted data through the interface
+  - Database backups would be required for recovery
+  - Re-adding the record requires knowing all the original data
+  
+  **Always be certain before deleting any record.**
+</Note>
+
+## Alternative to Deletion
+
+Before permanently deleting records, consider these alternatives:
+
+1. **Update instead** - Use the Update section to mark records as inactive
+2. **Archive** - Move records to an archive table (requires database access)
+3. **Export** - Save record data before deletion for historical purposes
+4. **Status field** - Add a status field to mark records as "inactive" rather than deleting

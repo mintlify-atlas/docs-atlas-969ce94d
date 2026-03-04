@@ -1,0 +1,81 @@
+---
+title: 'Admin Login'
+description: 'Learn how to access the admin panel of the school management system'
+---
+
+## Overview
+
+The admin login panel provides secure access to the school management system. You must have valid admin credentials to access the system's administrative features.
+
+## Accessing the Admin Panel
+
+<Steps>
+  <Step title="Navigate to the Login Page">
+    Open your web browser and navigate to `admin_login.php`. You should see the admin login panel interface with the school logo at the top.
+  </Step>
+
+  <Step title="Enter Admin Username">
+    In the **admin user** field, enter your administrator username. This field is required and must match a valid admin user in the system database.
+    
+    ```
+    Field name: admin_user
+    Type: text
+    Required: Yes
+    ```
+  </Step>
+
+  <Step title="Enter Admin Password">
+    In the **admin password** field, enter your administrator password. This field is required and will be masked for security.
+    
+    ```
+    Field name: admin_pass
+    Type: password
+    Required: Yes
+    ```
+  </Step>
+
+  <Step title="Submit the Form">
+    Click the **Submit** button to authenticate your credentials. The system will validate your username and password against the `admin_login` table in the database.
+  </Step>
+
+  <Step title="Access Granted">
+    If your credentials are correct, you will see a "correct" message and gain access to the admin panel. If authentication fails, you will see an "incorrect" message and need to re-enter your credentials.
+  </Step>
+</Steps>
+
+## Login Form Fields
+
+The admin login form contains the following fields:
+
+| Field Name | HTML Name | Type | Required | Description |
+|------------|-----------|------|----------|-------------|
+| Admin User | `admin_user` | text | Yes | Your administrator username |
+| Admin Password | `admin_pass` | password | Yes | Your administrator password |
+
+## After Successful Login
+
+Once logged in, you will have access to the main navigation menu with the following sections:
+
+- **View** - Access records for Students, Parents, Teachers, Classes, Contacts, Gym Members, and Salaries
+- **Add** - Create new records for any entity type
+- **Delete** - Remove existing records from the system
+- **Update** - Modify existing record information
+- **Contact Us** - Access the contact form
+
+## Security Notes
+
+<Warning>
+  - Never share your admin credentials with unauthorized users
+  - Always log out after completing administrative tasks
+  - Use strong passwords that combine letters, numbers, and special characters
+  - Ensure you are accessing the system from a secure network
+</Warning>
+
+## Navigation Structure
+
+After login, the system displays a navigation bar at the top with:
+- Home link (returns to `index.html`)
+- Dropdown menus for View, Add, Delete, and Update operations
+- Contact Us link for communication
+
+Each dropdown menu provides quick access to manage different record types including Students, Parents, Teachers, Classes, Gym Members, and Salaries.

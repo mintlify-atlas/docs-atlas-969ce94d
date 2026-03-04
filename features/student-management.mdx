@@ -1,0 +1,193 @@
+---
+title: 'Student Management'
+description: 'Manage student records including enrollment, personal information, and class assignments'
+---
+
+## Overview
+
+The Student Management feature allows administrators to maintain comprehensive student records, track their enrollment status, and manage their class assignments and parent relationships.
+
+<CardGroup cols={2}>
+  <Card title="Add Students" icon="user-plus">
+    Register new students with complete personal information
+  </Card>
+  <Card title="View Records" icon="list">
+    Browse all student records in a searchable table
+  </Card>
+  <Card title="Update Information" icon="pen-to-square">
+    Modify existing student details
+  </Card>
+  <Card title="Remove Students" icon="user-minus">
+    Delete student records when needed
+  </Card>
+</CardGroup>
+
+## Adding a Student
+
+To add a new student to the system, you need to provide the following information:
+
+### Required Fields
+
+<AccordionGroup>
+  <Accordion title="Student Name">
+    The student's first name (text field, required)
+    
+    **Form Field:** `Sname`
+  </Accordion>
+  
+  <Accordion title="Student Lastname">
+    The student's last name (text field, required)
+    
+    **Form Field:** `Ssurname`
+  </Accordion>
+  
+  <Accordion title="Student Birthday">
+    Date of birth in YYYY-MM-DD format (date picker, required)
+    
+    **Form Field:** `Sbirthday`
+    
+    <Note>Maximum date is set to 2023-04-06 to ensure age requirements are met</Note>
+  </Accordion>
+  
+  <Accordion title="Parent ID">
+    Reference to the student's parent record (text field, required)
+    
+    **Form Field:** `Parent_ID`
+    
+    <Warning>The parent must exist in the system before adding the student</Warning>
+  </Accordion>
+  
+  <Accordion title="Class ID">
+    The class the student is assigned to (text field, required)
+    
+    **Form Field:** `Class_ID`
+    
+    <Warning>The class must exist in the system before assignment</Warning>
+  </Accordion>
+</AccordionGroup>
+
+### Database Operation
+
+When you submit the add student form, the system performs the following INSERT operation:
+
+```php
+INSERT INTO Student1 (Sname, Ssurname, Sbirthday, Parent_ID, Class_ID) 
+VALUES ('$Sname', '$Ssurname', '$Sbirthday', '$Parent_ID', '$Class_ID')
+```
+
+<Note>
+  The system provides immediate feedback:
+  - **Success:** "New record created successfully"
+  - **Error:** "Error adding record"
+</Note>
+
+## Viewing Students
+
+The View Students page displays all student records in a comprehensive table format.
+
+### Displayed Columns
+
+| Column | Description |
+|--------|-------------|
+| **Student ID** | Auto-generated unique identifier (Sid) |
+| **Student First Name** | First name (Sname) |
+| **Student Last Name** | Last name (Ssurname) |
+| **Student Birthday** | Date of birth (Sbirthday) |
+| **Student's Parent ID** | Associated parent reference (Parent_ID) |
+| **Student's Class ID** | Current class assignment (Class_ID) |
+
+### Database Query
+
+```php
+SELECT Sid, Sname, Ssurname, Sbirthday, Parent_ID, Class_ID 
+FROM Student1
+```
+
+## Updating Student Information
+
+Modify existing student records by providing the student ID and new information.
+
+### Update Process
+
+1. **Identify the Student**
+   - Provide the Student ID (Sid) to locate the record
+
+2. **Enter New Information**
+   - Student Name (required)
+   - Student Surname (required)
+   - Student's New Birthday (optional, date field with max date 2023-04-06)
+
+3. **Submit Changes**
+   - The system updates only the specified fields
+
+### Database Operation
+
+```php
+UPDATE Student1 
+SET Sname = '$Sname', Ssurname = '$Ssurname', Sbirthday = '$Sbirthday' 
+WHERE Sid = '$Sid'
+```
+
+<Note>
+  **Feedback Messages:**
+  - Success: "Record has been uptaded."
+  - Error: "Error uptading record."
+</Note>
+
+## Deleting a Student
+
+Remove a student record from the system using their Student ID.
+
+### Deletion Process
+
+1. Navigate to the Delete Student page
+2. Enter the **Student ID** (Sid)
+3. Submit the form to permanently remove the record
+
+<Warning>
+  This operation is permanent and cannot be undone. Ensure you have the correct Student ID before deletion.
+</Warning>
+
+### Database Operation
+
+```php
+DELETE FROM Student1 
+WHERE Sid = $Sid
+```
+
+<Note>
+  **Response Messages:**
+  - Success: "Record has been deleted."
+  - Error: "Error deleting record."
+</Note>
+
+## Database Schema
+
+The `Student1` table structure:
+
+```sql
+Table: Student1
+- Sid (Primary Key, Auto-increment)
+- Sname (VARCHAR)
+- Ssurname (VARCHAR)
+- Sbirthday (DATE)
+- Parent_ID (Foreign Key → Parent.Parent_ID)
+- Class_ID (Foreign Key → Class.Class_ID)
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Data Validation" icon="check">
+    Always verify Parent ID and Class ID exist before creating student records
+  </Card>
+  <Card title="Date Formats" icon="calendar">
+    Use YYYY-MM-DD format for all birthday entries
+  </Card>
+  <Card title="Record Verification" icon="magnifying-glass">
+    Double-check Student ID before deletion operations
+  </Card>
+  <Card title="Complete Information" icon="clipboard-check">
+    Fill all required fields to ensure data integrity
+  </Card>
+</CardGroup>

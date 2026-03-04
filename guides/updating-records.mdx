@@ -1,0 +1,258 @@
+---
+title: 'Updating Records'
+description: 'Learn how to update existing records in the school management system'
+---
+
+## Overview
+
+The Update ("Uptade") section allows you to modify existing records in the school management system. You can update information for students, teachers, parents, classes, gym members, and salary records.
+
+<Note>
+  The system uses "Uptade" in the navigation menu (this appears to be a misspelling of "Update" in the original source code).
+</Note>
+
+## Accessing Update Forms
+
+<Steps>
+  <Step title="Navigate to the Update Menu">
+    From the main navigation bar, click on the **Uptade** dropdown menu to see all available record types.
+  </Step>
+
+  <Step title="Select Record Type">
+    Choose the type of record you want to update:
+    - Student
+    - Parent
+    - Teacher
+    - Class
+    - Gym
+    - Salary
+  </Step>
+</Steps>
+
+## Updating a Student Record
+
+Navigate to **Uptade > Student** (`UptadeStudent.html`) to modify student information.
+
+<Steps>
+  <Step title="Enter Student ID">
+    First, provide the ID of the student you want to update. This identifies which record to modify.
+    
+    ```
+    Field name: Sid
+    Type: text
+    Required: Yes
+    ```
+  </Step>
+
+  <Step title="Enter Updated Student Name">
+    Enter the new first name for the student.
+    
+    ```
+    Field name: Sname
+    Type: text
+    Required: Yes
+    ```
+  </Step>
+
+  <Step title="Enter Updated Student Surname">
+    Enter the new last name for the student.
+    
+    ```
+    Field name: Ssurname
+    Type: text
+    Required: Yes
+    ```
+  </Step>
+
+  <Step title="Update Student Birthday (Optional)">
+    If needed, select a new date of birth using the date picker. This field is optional during updates.
+    
+    ```
+    Field name: Sbirthday
+    Type: date
+    Required: No
+    Max date: 2023-04-06
+    ```
+  </Step>
+
+  <Step title="Submit the Update">
+    Click the **Submit** button to save changes. The form submits to `UptadeStudent.php` for processing.
+  </Step>
+</Steps>
+
+### Student Update Fields
+
+| Field | HTML Name | Type | Required | Description |
+|-------|-----------|------|----------|-------------|
+| Student ID | `Sid` | text | Yes | ID of student to update |
+| Student Name | `Sname` | text | Yes | Updated first name |
+| Student Surname | `Ssurname` | text | Yes | Updated last name |
+| Student's New Birthday | `Sbirthday` | date | No | Updated date of birth |
+
+## Updating a Teacher Record
+
+Navigate to **Uptade > Teacher** (`UptadeTeacher.html`) to modify teacher information.
+
+<Steps>
+  <Step title="Identify the Teacher">
+    Enter the Teacher ID to specify which teacher record to update.
+    
+    ```
+    Field name: Teacher_ID
+    Type: text
+    Required: Yes
+    ```
+  </Step>
+
+  <Step title="Update Teacher Information">
+    Fill in all the updated information for the teacher:
+
+    | Field | HTML Name | Type | Required | Description |
+    |-------|-----------|------|----------|-------------|
+    | Teacher ID | `Teacher_ID` | text | Yes | ID of teacher to update |
+    | New bonus amount | `bonus_amount` | text | Yes | Updated bonus amount |
+    | New teacher field | `teacher_field` | text | Yes | Updated subject/specialization |
+    | New teacher name | `Tname` | text | Yes | Updated first name |
+    | New teacher surname | `Tsurname` | text | Yes | Updated last name |
+    | New teacher address | `Taddress` | text | Yes | Updated address |
+    | New Teacher Mobile | `Tmobile` | number | Yes | Updated phone number |
+    | New Teacher Email | `Temail` | email | Yes | Updated email address |
+  </Step>
+
+  <Step title="Submit the Update">
+    Click the **Submit** button to save all changes via `UptadeTeacher.php`.
+  </Step>
+</Steps>
+
+## Updating a Parent Record
+
+Navigate to **Uptade > Parent** to modify parent information.
+
+<Steps>
+  <Step title="Enter Parent ID">
+    Provide the Parent ID to identify which record to update.
+  </Step>
+
+  <Step title="Update Parent Details">
+    Enter the updated information including:
+    - Parent first name
+    - Parent last name
+    - Parent address
+    - Parent email (optional)
+  </Step>
+
+  <Step title="Submit Changes">
+    Click the **Submit** button to update the parent record.
+  </Step>
+</Steps>
+
+## Updating a Class Record
+
+Navigate to **Uptade > Class** to modify class information.
+
+<Steps>
+  <Step title="Enter Class ID">
+    Specify which class to update by providing its ID.
+  </Step>
+
+  <Step title="Update Class Information">
+    Modify the class details:
+    - Class name/year
+    - Class capacity
+    - Assigned Teacher ID
+  </Step>
+
+  <Step title="Submit the Update">
+    Click the **Submit** button to save the changes.
+  </Step>
+</Steps>
+
+## Updating Gym Membership
+
+Navigate to **Uptade > Gym** (`UptadeGym.html`) to update gym member information.
+
+<Steps>
+  <Step title="Identify the Member">
+    Enter the gym member ID to specify which record to update.
+  </Step>
+
+  <Step title="Update Membership Details">
+    Enter the updated gym membership information.
+  </Step>
+
+  <Step title="Submit Changes">
+    Click the **Submit** button to save the updates.
+  </Step>
+</Steps>
+
+## Updating Salary Records
+
+Navigate to **Uptade > Salary** (`UptadeSalary.html`) to modify salary information.
+
+<Steps>
+  <Step title="Enter Salary Record ID">
+    Provide the ID of the salary record you want to update.
+  </Step>
+
+  <Step title="Update Salary Information">
+    Modify the salary details:
+    - Teacher ID (if changing assignment)
+    - Salary amount
+    - Working type (Part-Time or Full-Time)
+  </Step>
+
+  <Step title="Submit the Update">
+    Click the **Submit** button to save the changes.
+  </Step>
+</Steps>
+
+## Best Practices
+
+<Info>
+  - Always verify you have the correct ID before updating a record
+  - Review all fields before submitting to ensure accuracy
+  - Required fields must be completed even when updating
+  - Email fields must contain valid email addresses
+  - Date fields must use the date picker for proper formatting
+</Info>
+
+<Warning>
+  - Updating the wrong record can affect data integrity
+  - Changes take effect immediately upon submission
+  - There is no undo function - verify information before submitting
+  - Ensure foreign key relationships (Parent ID, Teacher ID, Class ID) reference valid existing records
+</Warning>
+
+## Common Update Scenarios
+
+### Scenario 1: Correcting Student Information
+If a student's name was entered incorrectly:
+1. Navigate to **Uptade > Student**
+2. Enter the student's ID
+3. Provide the corrected name and surname
+4. Leave the birthday field unchanged if not needed
+5. Submit the form
+
+### Scenario 2: Updating Teacher Contact Information
+When a teacher changes their phone number or email:
+1. Navigate to **Uptade > Teacher**
+2. Enter the Teacher ID
+3. Update the mobile number and/or email fields
+4. Fill in all other required fields with existing information
+5. Submit the form
+
+### Scenario 3: Adjusting Class Capacity
+If a class needs to accommodate more students:
+1. Navigate to **Uptade > Class**
+2. Enter the Class ID
+3. Update the capacity field with the new maximum
+4. Verify the Teacher ID is correct
+5. Submit the form
+
+### Scenario 4: Modifying Salary Information
+When a teacher receives a raise or changes employment type:
+1. Navigate to **Uptade > Salary**
+2. Enter the salary record ID
+3. Update the salary amount
+4. Change the working type if needed (Part-Time/Full-Time)
+5. Submit the form

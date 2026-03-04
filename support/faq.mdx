@@ -1,0 +1,192 @@
+---
+title: 'Frequently Asked Questions'
+description: 'Common questions and troubleshooting tips for the school management system'
+---
+
+## General Questions
+
+<AccordionGroup>
+  <Accordion title="What is this school management system?">
+    This is a comprehensive school management system designed to help educational institutions manage students, teachers, parents, classes, gym memberships, salaries, and administrative tasks. The system provides CRUD (Create, Read, Update, Delete) operations for all major entities.
+  </Accordion>
+
+  <Accordion title="Who can access the system?">
+    The system is designed for school administrators and authorized staff members. Access is controlled through the admin login system. Different user roles may have different levels of access to various features.
+  </Accordion>
+
+  <Accordion title="What data can I manage in the system?">
+    You can manage:
+    - Student records and enrollment information
+    - Teacher profiles and assignments
+    - Parent contact details
+    - Class schedules and information
+    - Gym membership records
+    - Salary information for staff
+    - Contact messages and feedback
+  </Accordion>
+</AccordionGroup>
+
+## Database and Connection Issues
+
+<AccordionGroup>
+  <Accordion title="I'm getting a 'Connection failed' error. What should I do?">
+    Database connection errors typically occur when:
+    
+    1. **Database server is down**: Contact your hosting provider to verify the MySQL server status
+    2. **Incorrect credentials**: Verify that the database credentials in `Contact.php` and other PHP files are correct:
+       - Host: `sdb-57.hosting.stackcp.net`
+       - Username: Check with your administrator
+       - Database name: Ensure it matches your assigned database
+    3. **Network issues**: Check your internet connection and firewall settings
+    4. **Database server maintenance**: The hosting provider may be performing maintenance
+    
+    If the issue persists, contact your system administrator or submit a support request through the Contact Us page.
+  </Accordion>
+
+  <Accordion title="Why am I seeing 'Error adding record' messages?">
+    This error occurs when the system fails to insert data into the database. Common causes include:
+    
+    - **Missing required fields**: Ensure all required form fields are filled out
+    - **Invalid data format**: Check that email addresses, dates, and other formatted fields are correct
+    - **Database permissions**: Your database user may lack INSERT permissions
+    - **Duplicate entries**: Some fields may require unique values (e.g., student IDs)
+    - **Database table issues**: The table structure may be corrupted or missing
+    
+    Try refreshing the page and resubmitting. If the error continues, contact support with details about which form you were using.
+  </Accordion>
+
+  <Accordion title="The page loads but doesn't show any data. What's wrong?">
+    If pages like ViewStudent.php or ViewTeacher.php load but display no records:
+    
+    1. **Empty database**: The tables may not contain any data yet. Try adding records first
+    2. **Query errors**: Check the browser console for PHP errors
+    3. **Display issues**: Clear your browser cache and cookies
+    4. **Database connection**: Verify the connection is working by checking other pages
+    
+    If you recently added data and it's not showing up, wait a few moments and refresh the page.
+  </Accordion>
+</AccordionGroup>
+
+## Login and Access Issues
+
+<AccordionGroup>
+  <Accordion title="I can't log in to the admin panel. What should I do?">
+    If you're having trouble accessing `admin_login.php`:
+    
+    1. **Verify credentials**: Double-check your username and password (passwords are case-sensitive)
+    2. **Account status**: Your account may be disabled or expired - contact your administrator
+    3. **Browser issues**: Try clearing cookies and cache, or use a different browser
+    4. **Session timeout**: If you were logged in previously, your session may have expired
+    5. **Server issues**: The authentication server may be temporarily unavailable
+    
+    If you've forgotten your password, contact your system administrator for a reset.
+  </Accordion>
+
+  <Accordion title="I keep getting logged out automatically. Why?">
+    Automatic logouts can occur due to:
+    
+    - **Session timeout**: The system logs users out after a period of inactivity for security
+    - **Browser settings**: Cookies may be disabled or being cleared automatically
+    - **Multiple tabs**: Opening the system in multiple tabs can cause session conflicts
+    - **Server configuration**: The PHP session settings may have a short timeout value
+    
+    To minimize interruptions, avoid opening multiple tabs and save your work frequently.
+  </Accordion>
+
+  <Accordion title="I don't have permission to access certain pages. How do I get access?">
+    Access permissions are controlled by user roles. If you need access to additional features:
+    
+    1. Contact your system administrator
+    2. Explain which functionality you need access to
+    3. Provide a business justification for the access request
+    
+    Your administrator will review the request and grant appropriate permissions if approved.
+  </Accordion>
+</AccordionGroup>
+
+## Common Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="How do I update student or teacher information?">
+    To update existing records:
+    
+    1. Navigate to the **Update** dropdown menu in the navigation bar
+    2. Select the entity type you want to update (Student, Parent, Teacher, Class, Gym, or Salary)
+    3. Enter the ID or search for the record you want to modify
+    4. Update the required fields
+    5. Click Submit to save changes
+    
+    Note: Some fields may be restricted based on your user role permissions.
+  </Accordion>
+
+  <Accordion title="Can I delete records from the system?">
+    Yes, authorized users can delete records:
+    
+    1. Use the **Delete** dropdown menu in the navigation bar
+    2. Select the entity type (Student, Parent, Teacher, Class, Gym, or Salary)
+    3. Enter the ID of the record to delete
+    4. Confirm the deletion when prompted
+    
+    **Warning**: Deletions are permanent and cannot be undone. Always verify you're deleting the correct record.
+  </Accordion>
+
+  <Accordion title="The system is running slowly. How can I improve performance?">
+    To optimize system performance:
+    
+    - **Clear browser cache**: Old cached files can slow down page loads
+    - **Close unnecessary tabs**: Multiple open tabs consume memory
+    - **Check internet connection**: Slow network speeds affect loading times
+    - **Use during off-peak hours**: System may be slower during high-usage periods
+    - **Update your browser**: Ensure you're using the latest version
+    
+    If performance issues persist across multiple devices, it may be a server-side issue. Contact support for assistance.
+  </Accordion>
+
+  <Accordion title="I submitted a form but I'm not sure if it worked. How can I verify?">
+    After submitting a form, you should see either:
+    - "New record created successfully" - The data was saved
+    - "Error adding record" - The submission failed
+    
+    To verify your data was saved:
+    1. Navigate to the appropriate **View** page from the navigation menu
+    2. Look for your newly added record in the table
+    3. Check that all fields contain the correct information
+    
+    If you don't see a confirmation message or can't find your record, try submitting again or contact support.
+  </Accordion>
+</AccordionGroup>
+
+## Technical Issues
+
+<AccordionGroup>
+  <Accordion title="What browsers are supported?">
+    The system is compatible with:
+    - Google Chrome (recommended)
+    - Mozilla Firefox
+    - Microsoft Edge
+    - Safari
+    
+    For the best experience, use the latest version of your browser with JavaScript enabled.
+  </Accordion>
+
+  <Accordion title="Do I need to install any software to use the system?">
+    No installation is required. The school management system is web-based and runs entirely in your browser. You only need:
+    - A modern web browser
+    - Internet connection
+    - Login credentials provided by your administrator
+  </Accordion>
+
+  <Accordion title="Is my data secure?">
+    The system implements several security measures:
+    - Database credentials are stored securely
+    - User authentication is required for access
+    - Data is transmitted over secure connections
+    - Regular backups are performed (frequency depends on hosting configuration)
+    
+    For specific security concerns or data privacy questions, contact your system administrator.
+  </Accordion>
+</AccordionGroup>
+
+## Still Need Help?
+
+If your question isn't answered here, please visit our [Contact](/support/contact) page to submit a support request or reach out to your system administrator directly.

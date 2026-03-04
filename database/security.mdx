@@ -1,0 +1,512 @@
+---
+title: Database Security
+description: Critical security vulnerabilities and best practices for database operations
+---
+
+## Critical Security Issues
+
+<Warning>
+**URGENT**: The current codebase contains critical SQL injection vulnerabilities that must be addressed before production deployment. All database queries directly concatenate user input without sanitization or parameterization.
+</Warning>
+
+## SQL Injection Vulnerabilities
+
+### Vulnerable Code Examples
+
+The following real examples from the codebase demonstrate SQL injection vulnerabilities:
+
+#### 1. Admin Login (admin_login.php:160)
+
+**Vulnerable Code:**
+```php
+$query="SELECT * FROM `admin_login` 
+        WHERE admin_user=$_POST['admin_user'] 
+        AND admin_pass=$_POST['admin_pass']";
+$result=mysqli_query($connection,$query);
+if(mysqli_num_rows($result)==1){
+    echo"correct."; 
+}else{
+    echo"incorrect.";
+}
+```
+
+**Security Issue:** 
+- No quotes around POST values
+- No input sanitization
+- Attacker can inject: `admin' OR '1'='1` to bypass authentication
+
+**Attack Example:**
+```
+Username: admin' OR '1'='1
+Password: anything
+
+Resulting Query:
+SELECT * FROM `admin_login` 
+WHERE admin_user=admin' OR '1'='1 AND admin_pass=anything
+```
+
+---
+
+#### 2. Student Insertion (AddStudent.php:39)
+
+**Vulnerable Code:**
+```php
+$Sname = $_POST['Sname'];
+$Ssurname = $_POST['Ssurname'];
+$Sbirthday = $_POST['Sbirthday'];
+$Parent_ID = $_POST['Parent_ID'];
+$Class_ID = $_POST['Class_ID'];
+
+$send = "INSERT INTO Student1 (Sname,Ssurname,Sbirthday,Parent_ID,Class_ID) 
+         VALUES ('$Sname','$Ssurname','$Sbirthday','$Parent_ID','$Class_ID')";
+mysqli_query($link, $send);
+```
+
+**Security Issue:**
+- Direct variable interpolation
+- Attacker can inject malicious SQL
+- No input validation
+
+**Attack Example:**
+```
+Sname: John', 'Doe', '2000-01-01', 1, 1); DROP TABLE Student1; --
+
+Resulting Query:
+INSERT INTO Student1 (Sname,Ssurname,Sbirthday,Parent_ID,Class_ID) 
+VALUES ('John', 'Doe', '2000-01-01', 1, 1); DROP TABLE Student1; --','$Ssurname',...)
+```
+
+---
+
+#### 3. Student Deletion (DeleteStudent.php:13)
+
+**Vulnerable Code:**
+```php
+$Sid = $_POST['Sid'];
+$delete= "DELETE FROM Student1 WHERE Sid=$Sid";
+mysqli_query($connection,$delete);
+```
+
+**Security Issue:**
+- No parameterization
+- Integer field without validation
+- Attacker can delete multiple records
+
+**Attack Example:**
+```
+Sid: 1 OR 1=1
+
+Resulting Query:
+DELETE FROM Student1 WHERE Sid=1 OR 1=1
+(Deletes ALL students)
+```
+
+---
+
+#### 4. Student Update (UptadeStudent.php:19)
+
+**Vulnerable Code:**
+```php
+$Sid=$_POST['Sid'];
+$Sname=$_POST['Sname'];
+$Ssurname=$_POST['Ssurname'];
+$Sbirthday=$_POST['Sbirthday'];
+
+$uptade = "UPDATE Student1 
+           SET Sname = '$Sname', Ssurname = '$Ssurname', Sbirthday='$Sbirthday' 
+           WHERE Sid= '$Sid'";
+mysqli_query($link,$uptade);
+```
+
+**Security Issue:**
+- Multiple injection points
+- Can modify unintended records
+- No input sanitization
+
+---
+
+## Secure Implementation Solutions
+
+### Solution 1: Prepared Statements (Recommended)
+
+Prepared statements with parameter binding completely prevent SQL injection.
+
+#### Secure Admin Login
+
+```php
+// SECURE VERSION using prepared statements
+$admin_user = $_POST['admin_user'];
+$admin_pass = $_POST['admin_pass'];
+
+// Prepare statement
+$stmt = $connection->prepare("SELECT * FROM admin_login WHERE admin_user=? AND admin_pass=?");
+
+// Bind parameters ("ss" means two strings)
+$stmt->bind_param("ss", $admin_user, $admin_pass);
+
+// Execute
+$stmt->execute();
+
+// Get result
+$result = $stmt->get_result();
+
+if($result->num_rows == 1) {
+    echo "correct.";
+} else {
+    echo "incorrect.";
+}
+
+$stmt->close();
+```
+
+<Info>
+**Parameter Type Codes:**
+- `i` - integer
+- `d` - double/float
+- `s` - string
+- `b` - blob
+</Info>
+
+---
+
+#### Secure Student Insert
+
+```php
+// SECURE VERSION
+$Sname = $_POST['Sname'];
+$Ssurname = $_POST['Ssurname'];
+$Sbirthday = $_POST['Sbirthday'];
+$Parent_ID = $_POST['Parent_ID'];
+$Class_ID = $_POST['Class_ID'];
+
+// Prepare statement
+$stmt = $link->prepare("INSERT INTO Student1 (Sname,Ssurname,Sbirthday,Parent_ID,Class_ID) 
+                        VALUES (?,?,?,?,?)");
+
+// Bind parameters (3 strings, 2 integers)
+$stmt->bind_param("sssii", $Sname, $Ssurname, $Sbirthday, $Parent_ID, $Class_ID);
+
+// Execute
+if ($stmt->execute()) {
+    echo "New record created successfully";
+} else {
+    echo "Error adding record: " . $stmt->error;
+}
+
+$stmt->close();
+```
+
+---
+
+#### Secure Student Delete
+
+```php
+// SECURE VERSION
+$Sid = $_POST['Sid'];
+
+// Prepare statement
+$stmt = $connection->prepare("DELETE FROM Student1 WHERE Sid=?");
+
+// Bind parameter (integer)
+$stmt->bind_param("i", $Sid);
+
+// Execute
+if($stmt->execute()) {
+    echo "Record has been deleted.";
+} else {
+    echo "Error deleting record: " . $stmt->error;
+}
+
+$stmt->close();
+```
+
+---
+
+#### Secure Student Update
+
+```php
+// SECURE VERSION
+$Sid = $_POST['Sid'];
+$Sname = $_POST['Sname'];
+$Ssurname = $_POST['Ssurname'];
+$Sbirthday = $_POST['Sbirthday'];
+
+// Prepare statement
+$stmt = $link->prepare("UPDATE Student1 
+                        SET Sname=?, Ssurname=?, Sbirthday=? 
+                        WHERE Sid=?");
+
+// Bind parameters (3 strings, 1 integer)
+$stmt->bind_param("sssi", $Sname, $Ssurname, $Sbirthday, $Sid);
+
+// Execute
+if($stmt->execute()) {
+    echo "Record has been updated.";
+} else {
+    echo "Error updating record: " . $stmt->error;
+}
+
+$stmt->close();
+```
+
+---
+
+#### Secure Select Query
+
+```php
+// SECURE VERSION for viewing students
+$stmt = $link->prepare("SELECT Sid, Sname, Ssurname, Sbirthday, Parent_ID, Class_ID 
+                        FROM Student1");
+$stmt->execute();
+$result = $stmt->get_result();
+
+while ($row = $result->fetch_assoc()) {
+    echo "<tr>";
+    echo "<th>" . htmlspecialchars($row['Sid']) . "</th>";
+    echo "<th>" . htmlspecialchars($row['Sname']) . "</th>";
+    echo "<th>" . htmlspecialchars($row['Ssurname']) . "</th>";
+    echo "<th>" . htmlspecialchars($row['Sbirthday']) . "</th>";
+    echo "<th>" . htmlspecialchars($row['Parent_ID']) . "</th>";
+    echo "<th>" . htmlspecialchars($row['Class_ID']) . "</th>";
+    echo "</tr>";
+}
+
+$stmt->close();
+```
+
+<Note>
+Notice the use of `htmlspecialchars()` when outputting data. This prevents XSS (Cross-Site Scripting) attacks.
+</Note>
+
+---
+
+### Solution 2: Input Sanitization (Fallback)
+
+If prepared statements cannot be used, at minimum sanitize inputs:
+
+```php
+// Escape special characters
+$Sname = mysqli_real_escape_string($link, $_POST['Sname']);
+$Ssurname = mysqli_real_escape_string($link, $_POST['Ssurname']);
+$Sbirthday = mysqli_real_escape_string($link, $_POST['Sbirthday']);
+
+// Validate and cast integers
+$Parent_ID = (int)$_POST['Parent_ID'];
+$Class_ID = (int)$_POST['Class_ID'];
+
+$sql = "INSERT INTO Student1 (Sname,Ssurname,Sbirthday,Parent_ID,Class_ID) 
+        VALUES ('$Sname','$Ssurname','$Sbirthday',$Parent_ID,$Class_ID)";
+```
+
+<Warning>
+`mysqli_real_escape_string()` is NOT foolproof and should only be used as a last resort. Prepared statements are always preferred.
+</Warning>
+
+---
+
+## Password Security
+
+### Current Issue
+
+The admin_login table stores passwords in plain text:
+
+```php
+// INSECURE: Plain text password comparison
+$query="SELECT * FROM `admin_login` 
+        WHERE admin_user=$_POST['admin_user'] 
+        AND admin_pass=$_POST['admin_pass']";
+```
+
+### Secure Password Storage
+
+Passwords must be hashed using PHP's password functions:
+
+#### Registration/Password Creation
+
+```php
+// Hash password before storing
+$admin_user = $_POST['admin_user'];
+$admin_pass = $_POST['admin_pass'];
+
+// Hash the password (uses bcrypt by default)
+$hashed_password = password_hash($admin_pass, PASSWORD_DEFAULT);
+
+// Store hashed password
+$stmt = $connection->prepare("INSERT INTO admin_login (admin_user, admin_pass) VALUES (?, ?)");
+$stmt->bind_param("ss", $admin_user, $hashed_password);
+$stmt->execute();
+```
+
+#### Login/Password Verification
+
+```php
+// SECURE LOGIN with hashed passwords
+$admin_user = $_POST['admin_user'];
+$admin_pass = $_POST['admin_pass'];
+
+// Fetch user record
+$stmt = $connection->prepare("SELECT admin_pass FROM admin_login WHERE admin_user=?");
+$stmt->bind_param("s", $admin_user);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if($result->num_rows == 1) {
+    $row = $result->fetch_assoc();
+    
+    // Verify password against hash
+    if(password_verify($admin_pass, $row['admin_pass'])) {
+        echo "correct.";
+        // Start session, set cookies, etc.
+    } else {
+        echo "incorrect.";
+    }
+} else {
+    echo "incorrect.";
+}
+
+$stmt->close();
+```
+
+---
+
+## Additional Security Best Practices
+
+### 1. Input Validation
+
+Validate all inputs before processing:
+
+```php
+// Validate email
+if (!filter_var($_POST['Temail'], FILTER_VALIDATE_EMAIL)) {
+    die("Invalid email format");
+}
+
+// Validate date
+$date = DateTime::createFromFormat('Y-m-d', $_POST['Sbirthday']);
+if (!$date) {
+    die("Invalid date format");
+}
+
+// Validate integer
+if (!is_numeric($_POST['Sid']) || $_POST['Sid'] < 1) {
+    die("Invalid student ID");
+}
+
+// Validate string length
+if (strlen($_POST['Sname']) > 50) {
+    die("Name too long");
+}
+```
+
+### 2. Output Encoding
+
+Always encode output to prevent XSS:
+
+```php
+// Instead of:
+echo $row['Sname'];
+
+// Use:
+echo htmlspecialchars($row['Sname'], ENT_QUOTES, 'UTF-8');
+```
+
+### 3. Error Handling
+
+Don't expose sensitive information in errors:
+
+```php
+// INSECURE:
+die("Connection failed: " . mysqli_connect_error());
+
+// SECURE:
+error_log("Database connection failed: " . mysqli_connect_error());
+die("A system error occurred. Please contact support.");
+```
+
+### 4. Database User Permissions
+
+Use principle of least privilege:
+
+- Create separate database users for different operations
+- Don't use root/admin accounts for application queries
+- Grant only necessary permissions (SELECT, INSERT, UPDATE, DELETE)
+- Revoke DROP, CREATE, ALTER permissions for application users
+
+```sql
+-- Create limited user
+CREATE USER 'school_app'@'localhost' IDENTIFIED BY 'strong_password';
+
+-- Grant only needed permissions
+GRANT SELECT, INSERT, UPDATE, DELETE ON student84_353031351c89.* TO 'school_app'@'localhost';
+
+-- Don't grant:
+-- GRANT DROP, CREATE, ALTER, GRANT OPTION
+```
+
+### 5. HTTPS Only
+
+Always use HTTPS to encrypt data in transit:
+
+```php
+// Force HTTPS
+if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] !== 'on') {
+    header('Location: https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+    exit;
+}
+```
+
+### 6. Session Security
+
+Implement secure session management:
+
+```php
+// Start secure session
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', 1);
+ini_set('session.use_only_cookies', 1);
+session_start();
+
+// Regenerate session ID after login
+session_regenerate_id(true);
+```
+
+### 7. Rate Limiting
+
+Protect against brute force attacks:
+
+```php
+// Simple rate limiting for login attempts
+if (!isset($_SESSION['login_attempts'])) {
+    $_SESSION['login_attempts'] = 0;
+    $_SESSION['last_attempt'] = time();
+}
+
+if ($_SESSION['login_attempts'] >= 5) {
+    if (time() - $_SESSION['last_attempt'] < 900) { // 15 minutes
+        die("Too many login attempts. Please try again in 15 minutes.");
+    } else {
+        $_SESSION['login_attempts'] = 0;
+    }
+}
+```
+
+## Security Checklist
+
+- [ ] Replace all direct SQL queries with prepared statements
+- [ ] Hash all passwords using `password_hash()`
+- [ ] Validate all user inputs
+- [ ] Encode all outputs with `htmlspecialchars()`
+- [ ] Remove detailed error messages from production
+- [ ] Use HTTPS for all connections
+- [ ] Implement session security
+- [ ] Add rate limiting to login forms
+- [ ] Use database users with minimal permissions
+- [ ] Move database credentials to environment variables
+- [ ] Enable SQL query logging for auditing
+- [ ] Implement CSRF token protection
+- [ ] Add SQL injection detection/blocking
+- [ ] Regular security audits and penetration testing
+
+<Warning>
+**Critical Priority**: The authentication and data manipulation vulnerabilities must be fixed before any production deployment. The current implementation allows complete database compromise.
+</Warning>

@@ -1,0 +1,367 @@
+---
+title: 'Gym Management'
+description: 'Manage gym memberships, membership tiers, and student fitness program enrollment'
+---
+
+## Overview
+
+The Gym Management system handles student enrollment in fitness programs, tracks membership types, monitors registration dates, and manages medical conditions for safe participation.
+
+<CardGroup cols={2}>
+  <Card title="Register Members" icon="dumbbell">
+    Enroll students in gym programs with membership tiers
+  </Card>
+  <Card title="View Members" icon="id-card">
+    Access gym membership records and medical information
+  </Card>
+  <Card title="Update Memberships" icon="rotate">
+    Modify membership types and member information
+  </Card>
+  <Card title="Remove Members" icon="user-minus">
+    Delete gym membership records
+  </Card>
+</CardGroup>
+
+## Adding a Gym Member
+
+Register students for gym membership programs with appropriate tier selection.
+
+### Required Information
+
+<AccordionGroup>
+  <Accordion title="Student ID">
+    Reference to the enrolled student (text field, required)
+    
+    **Form Field:** `Sid`
+    
+    <Warning>
+      The student must already be registered in the Student Management system. Use their Student ID (Sid).
+    </Warning>
+  </Accordion>
+  
+  <Accordion title="Full Name">
+    Student's complete name (text field, required)
+    
+    **Form Field:** `gymFullName`
+    
+    Enter the full name as it should appear on gym records
+  </Accordion>
+  
+  <Accordion title="Registration Date">
+    Date of gym membership enrollment (date field, required)
+    
+    **Form Field:** `userRegDate`
+    
+    <Note>The system uses this date to calculate membership expiration</Note>
+  </Accordion>
+  
+  <Accordion title="Member Type">
+    Membership tier selection (dropdown, required)
+    
+    **Form Field:** `memberType`
+    
+    <CardGroup cols={2}>
+      <Card title="Bronze" icon="medal">
+        30-day membership duration
+      </Card>
+      <Card title="Silver" icon="medal">
+        60-day membership duration
+      </Card>
+      <Card title="Gold" icon="medal">
+        90-day membership duration
+      </Card>
+      <Card title="Diamond" icon="gem">
+        180-day membership duration
+      </Card>
+    </CardGroup>
+  </Accordion>
+  
+  <Accordion title="Medical Condition">
+    Any relevant health conditions (text field, optional)
+    
+    **Form Field:** `medicalCondition`
+    
+    <Info>
+      Document any medical conditions that may affect gym participation:
+      - Asthma
+      - Heart conditions
+      - Physical limitations
+      - Allergies
+      - Other relevant health information
+    </Info>
+  </Accordion>
+</AccordionGroup>
+
+### Membership Duration Calculation
+
+The system automatically calculates expiration dates based on membership type:
+
+```php
+// Bronze Member - 30 days
+if($memberType == "bronzeMember") {
+    $endingDate = date_create("now");
+    date_add($endingDate, date_interval_create_from_date_string("30 days"));
+    echo "Your membership will expire on " . date_format($endingDate, "Y-m-d");
+}
+
+// Silver Member - 60 days
+elseif($memberType == "silverMember") {
+    $endingDate = date_create("now");
+    date_add($endingDate, date_interval_create_from_date_string("60 days"));
+    echo "Your membership will expire on " . date_format($endingDate, "Y-m-d");
+}
+
+// Gold Member - 90 days
+elseif($memberType == "goldMember") {
+    $endingDate = date_create("now");
+    date_add($endingDate, date_interval_create_from_date_string("90 days"));
+    echo "Your membership will expire on " . date_format($endingDate, "Y-m-d");
+}
+
+// Diamond Member - 180 days
+elseif($memberType == "diamondMember") {
+    $endingDate = date_create("now");
+    date_add($endingDate, date_interval_create_from_date_string("180 days"));
+    echo "Your membership will expire on " . date_format($endingDate, "Y-m-d");
+}
+```
+
+<Note>
+  The expiration date is calculated and displayed immediately upon form submission.
+</Note>
+
+### Database Operation
+
+```php
+INSERT INTO Gym (Sid, gymFullName, userRegDate, memberType, medicalCondition) 
+VALUES ('$Sid', '$gymFullName', '$userRegDate', '$memberType', '$medicalCondition')
+```
+
+<Note>
+  **System Feedback:**
+  - Success: "New record created successfully"
+  - Error: "Error adding record"
+</Note>
+
+## Viewing Gym Members
+
+Access comprehensive gym membership information for all enrolled members.
+
+### Display Columns
+
+| Column | Description | Field Name |
+|--------|-------------|------------|
+| **Student ID** | Reference to student record | Sid |
+| **Gym Member ID** | Unique gym membership identifier | gymMemberID |
+| **Full Name** | Member's complete name | gymFullName |
+| **Registration Date** | Date of enrollment | userRegDate |
+| **Member Type** | Membership tier (Bronze/Silver/Gold/Diamond) | memberType |
+| **Medical Condition** | Health considerations | medicalCondition |
+
+### Database Query
+
+```php
+SELECT Sid, gymMemberID, gymFullName, userRegDate, memberType, medicalCondition 
+FROM Gym
+```
+
+## Membership Tiers Explained
+
+<Tabs>
+  <Tab title="Bronze">
+    ### Bronze Membership
+    
+    **Duration:** 30 days
+    
+    **Value:** `bronzeMember`
+    
+    Ideal for students trying out gym facilities or short-term fitness goals.
+  </Tab>
+  
+  <Tab title="Silver">
+    ### Silver Membership
+    
+    **Duration:** 60 days
+    
+    **Value:** `silverMember`
+    
+    Suitable for students committed to regular fitness routines over two months.
+  </Tab>
+  
+  <Tab title="Gold">
+    ### Gold Membership
+    
+    **Duration:** 90 days
+    
+    **Value:** `goldMember`
+    
+    Perfect for students engaged in semester-long fitness programs.
+  </Tab>
+  
+  <Tab title="Diamond">
+    ### Diamond Membership
+    
+    **Duration:** 180 days
+    
+    **Value:** `diamondMember`
+    
+    Best value for students committed to long-term fitness throughout the school year.
+  </Tab>
+</Tabs>
+
+## Medical Condition Management
+
+<Warning>
+  Medical conditions must be documented for student safety during physical activities.
+</Warning>
+
+### Important Considerations
+
+<AccordionGroup>
+  <Accordion title="Health Documentation">
+    Record any conditions that may affect gym participation:
+    - Cardiovascular issues
+    - Respiratory conditions (asthma, etc.)
+    - Physical limitations or injuries
+    - Chronic conditions requiring monitoring
+  </Accordion>
+  
+  <Accordion title="Safety Protocols">
+    Staff should review medical conditions before allowing participation in:
+    - High-intensity activities
+    - Competitive sports
+    - Specialized equipment use
+  </Accordion>
+  
+  <Accordion title="Emergency Information">
+    Ensure medical conditions are:
+    - Clearly documented
+    - Accessible to gym staff
+    - Updated when conditions change
+  </Accordion>
+</AccordionGroup>
+
+## Updating Gym Memberships
+
+Modify existing gym membership records including tier changes and medical information updates.
+
+### Update Process
+
+<Steps>
+  <Step title="Locate Member">
+    Enter the Gym Member ID to find the record
+  </Step>
+  
+  <Step title="Update Information">
+    Modify:
+    - Membership type (upgrade/downgrade)
+    - Registration date (if renewing)
+    - Medical condition information
+    - Full name (if needed)
+  </Step>
+  
+  <Step title="Recalculate Expiration">
+    If changing membership type, the new expiration date will be calculated
+  </Step>
+  
+  <Step title="Save Changes">
+    Submit to update the gym membership record
+  </Step>
+</Steps>
+
+### Database Operation
+
+```php
+UPDATE Gym 
+SET gymFullName = '$gymFullName', userRegDate = '$userRegDate', 
+    memberType = '$memberType', medicalCondition = '$medicalCondition' 
+WHERE gymMemberID = '$gymMemberID'
+```
+
+## Deleting Gym Members
+
+Remove gym membership records from the system.
+
+### Deletion Process
+
+1. Navigate to **Delete Gym Member** page
+2. Enter the **Gym Member ID**
+3. Confirm deletion
+
+<Warning>
+  This action permanently removes the gym membership record. Ensure the member is no longer actively using facilities.
+</Warning>
+
+### Database Operation
+
+```php
+DELETE FROM Gym 
+WHERE gymMemberID = $gymMemberID
+```
+
+## Database Schema
+
+The `Gym` table structure:
+
+```sql
+Table: Gym
+- gymMemberID (Primary Key, Auto-increment)
+- Sid (Foreign Key → Student1.Sid)
+- gymFullName (VARCHAR)
+- userRegDate (DATE)
+- memberType (ENUM or VARCHAR: bronzeMember, silverMember, goldMember, diamondMember)
+- medicalCondition (TEXT)
+```
+
+## Membership Lifecycle
+
+```mermaid
+graph LR
+    A[Student Enrollment] --> B[Select Tier]
+    B --> C[Calculate Expiration]
+    C --> D[Active Membership]
+    D --> E{Renewal?}
+    E -->|Yes| B
+    E -->|No| F[Expiration]
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Verify Student ID" icon="magnifying-glass">
+    Confirm the student exists before creating gym membership
+  </Card>
+  <Card title="Document Medical Info" icon="file-medical">
+    Always ask about and record medical conditions
+  </Card>
+  <Card title="Track Expirations" icon="calendar-xmark">
+    Monitor membership expiration dates for renewals
+  </Card>
+  <Card title="Update Conditions" icon="arrows-rotate">
+    Regularly review and update medical information
+  </Card>
+</CardGroup>
+
+## Administrative Tips
+
+<Steps>
+  <Step title="Regular Reviews">
+    Check membership expiration dates weekly
+  </Step>
+  
+  <Step title="Renewal Reminders">
+    Contact members approaching expiration
+  </Step>
+  
+  <Step title="Medical Updates">
+    Request medical information updates at renewal
+  </Step>
+  
+  <Step title="Tier Recommendations">
+    Help students choose appropriate membership tiers based on their fitness goals
+  </Step>
+</Steps>
+
+<Info>
+  Gym memberships are linked to student records via Student ID (Sid). Ensure the student record exists before creating a gym membership.
+</Info>

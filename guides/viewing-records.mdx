@@ -1,0 +1,283 @@
+---
+title: 'Viewing Records'
+description: 'Learn how to view and browse records in the school management system'
+---
+
+## Overview
+
+The View section provides access to browse and review all records stored in the school management system. You can view comprehensive lists of students, parents, teachers, classes, contacts, gym members, and salary information.
+
+## Accessing View Pages
+
+<Steps>
+  <Step title="Navigate to the View Menu">
+    From the main navigation bar, click on the **View** dropdown menu to see all available record types.
+  </Step>
+
+  <Step title="Select Record Type">
+    Choose the type of records you want to view:
+    - Student
+    - Parent
+    - Teacher
+    - Class
+    - Contact
+    - Gym
+    - Salary
+  </Step>
+</Steps>
+
+## Viewing Student Records
+
+Navigate to **View > Student** (`ViewStudent.php`) to see all student records.
+
+### Student List Display
+
+The student view page displays a table with the following columns:
+
+| Column | Database Field | Description |
+|--------|----------------|-------------|
+| student ID | `Sid` | Unique identifier for the student |
+| Student First Name | `Sname` | Student's first name |
+| Student Last Name | `Ssurname` | Student's last name |
+| Student Birthday | `Sbirthday` | Student's date of birth |
+| Student's Parent ID | `Parent_ID` | Reference to parent record |
+| Student's Class ID | `Class_ID` | Reference to assigned class |
+
+<Steps>
+  <Step title="Access the Student View">
+    Click **View > Student** from the navigation menu. This loads `ViewStudent.php`.
+  </Step>
+
+  <Step title="Review the Student List">
+    The page displays a table titled "See all Students" with all student records from the `Student1` table in the database.
+  </Step>
+
+  <Step title="Locate Specific Information">
+    Browse through the table to find specific student information. The table shows:
+    - Each student's unique ID for reference
+    - Full name (first and last)
+    - Date of birth
+    - Associated parent and class assignments
+  </Step>
+</Steps>
+
+### Navigation from Student View
+
+While viewing student records, you can quickly navigate to:
+- **Home** - Return to the main page
+- **Other View pages** - Switch to viewing Parents, Teachers, Classes, etc.
+- **Add section** - Create new student records
+- **Delete section** - Remove student records
+- **Update section** - Modify existing student information
+- **Contact Us** - Access the contact form
+
+## Viewing Teacher Records
+
+Navigate to **View > Teacher** (`ViewTeacher.php`) to see all teacher records.
+
+<Steps>
+  <Step title="Access Teacher View">
+    Click **View > Teacher** from the navigation menu.
+  </Step>
+
+  <Step title="Review Teacher Information">
+    The page displays a table with all teacher records, including:
+    - Teacher ID
+    - Teacher name and surname
+    - Teaching field/specialization
+    - Contact information (address, mobile, email)
+    - Bonus amount (if applicable)
+  </Step>
+</Steps>
+
+## Viewing Parent Records
+
+Navigate to **View > Parent** (`ViewParent.php`) to see all parent records.
+
+<Steps>
+  <Step title="Access Parent View">
+    Click **View > Parent** from the navigation menu.
+  </Step>
+
+  <Step title="Review Parent Information">
+    The page displays parent records including:
+    - Parent ID
+    - Parent first and last name
+    - Address
+    - Email address (if provided)
+  </Step>
+</Steps>
+
+## Viewing Class Records
+
+Navigate to **View > Class** (`ViewClass.php`) to see all class information.
+
+<Steps>
+  <Step title="Access Class View">
+    Click **View > Class** from the navigation menu.
+  </Step>
+
+  <Step title="Review Class Information">
+    The page displays class records including:
+    - Class ID
+    - Class name/year
+    - Class capacity
+    - Assigned Teacher ID
+  </Step>
+</Steps>
+
+## Viewing Contact Submissions
+
+Navigate to **View > Contact** (`ViewContact.php`) to see contact form submissions.
+
+<Steps>
+  <Step title="Access Contact View">
+    Click **View > Contact** from the navigation menu.
+  </Step>
+
+  <Step title="Review Contact Messages">
+    View all messages submitted through the contact form, which may include:
+    - Contact name
+    - Email address
+    - Message content
+    - Submission date/time
+  </Step>
+</Steps>
+
+## Viewing Gym Member Records
+
+Navigate to **View > Gym** (`ViewGymMember.php`) to see gym membership information.
+
+<Steps>
+  <Step title="Access Gym Member View">
+    Click **View > Gym** from the navigation menu.
+  </Step>
+
+  <Step title="Review Membership Information">
+    View all gym member records including:
+    - Member ID
+    - Member details
+    - Membership status
+    - Related information
+  </Step>
+</Steps>
+
+## Viewing Salary Records
+
+Navigate to **View > Salary** (`ViewSalary.php`) to see teacher salary information.
+
+<Steps>
+  <Step title="Access Salary View">
+    Click **View > Salary** from the navigation menu.
+  </Step>
+
+  <Step title="Review Salary Information">
+    View salary records including:
+    - Salary ID
+    - Teacher ID
+    - Salary amount
+    - Working type (Part-Time or Full-Time)
+  </Step>
+</Steps>
+
+## Understanding the Table Layout
+
+All view pages use a consistent table format:
+
+- **Header Row** - Column titles with horizontal rules
+- **Data Rows** - Individual records from the database
+- **Fixed Column Widths** - Consistent spacing for readability (e.g., 150px for IDs, 250px for names)
+
+### Example Table Structure
+
+The student view table structure:
+
+```html
+<table>
+  <tr>
+    <th width="150px">student ID<br><hr></th>
+    <th width="250px">Student First Name<br><hr></th>
+    <th width="250px">Student Last Name<br><hr></th>
+    <th width="120px">Student Birthday<br><hr></th>
+    <th width="100px">Student's Parent ID<br><hr></th>
+    <th width="100px">Student's Class ID<br><hr></th>
+  </tr>
+  <!-- Data rows populated from database -->
+</table>
+```
+
+## Using View Data for Other Operations
+
+<Info>
+  The view pages are essential for:
+  - **Finding IDs** - Locate student, teacher, parent, or class IDs needed for updates or deletions
+  - **Verifying Records** - Confirm that records were added correctly
+  - **Checking Relationships** - See which students are assigned to which parents and classes
+  - **Data Validation** - Ensure all required information is present
+  - **Planning Updates** - Identify records that need modification
+</Info>
+
+## Tips for Effective Viewing
+
+<Tip>
+  1. **Use View before Update or Delete** - Always check the record details and ID before making changes
+  2. **Verify Relationships** - Use the view to confirm Parent IDs and Class IDs exist before assigning them
+  3. **Check Data Integrity** - Look for missing or incorrect information that needs updating
+  4. **Reference IDs** - Note down IDs when planning bulk operations
+  5. **Cross-Reference** - Use multiple view pages to verify relationships between students, parents, and classes
+</Tip>
+
+## Navigation Between Views
+
+The navigation bar remains consistent across all view pages:
+
+1. **Home Link** - Return to `index.html` at any time
+2. **View Dropdown** - Switch between different record types
+3. **Add Dropdown** - Quickly navigate to add new records
+4. **Delete Dropdown** - Access deletion pages
+5. **Uptade Dropdown** - Access update pages
+6. **Contact Us** - Open the contact form
+
+## Database Connection
+
+<Note>
+  All view pages connect to the database to fetch real-time data. The student view page, for example, executes the following SQL query:
+  
+  ```sql
+  SELECT Sid, Sname, Ssurname, Sbirthday, Parent_ID, Class_ID 
+  FROM Student1
+  ```
+  
+  This ensures you always see the most current information stored in the system.
+</Note>
+
+## Common Viewing Scenarios
+
+### Scenario 1: Finding a Student's Class Assignment
+1. Navigate to **View > Student**
+2. Locate the student by name or ID
+3. Note the Class_ID value
+4. Navigate to **View > Class**
+5. Find the class record with that Class_ID
+6. View the class details including teacher assignment
+
+### Scenario 2: Verifying Parent Contact Information
+1. Navigate to **View > Student** 
+2. Find the student and note their Parent_ID
+3. Navigate to **View > Parent**
+4. Locate the parent record with that ID
+5. Review the contact details (address, email)
+
+### Scenario 3: Reviewing Teacher Assignments
+1. Navigate to **View > Teacher**
+2. Note the Teacher_ID for the teacher you're interested in
+3. Navigate to **View > Class**
+4. Find all classes assigned to that Teacher_ID
+5. Navigate to **View > Salary**
+6. Check the salary information for that Teacher_ID
+
+### Scenario 4: Auditing System Data
+1. Start with **View > Class** to see all classes
+2. Check **View > Teacher** to verify all classes have valid teacher assignments
+3. Review **View > Student** to ensure all students have valid Parent_ID and Class_ID references
+4. Cross-check **View > Parent** to confirm all referenced parent IDs exist

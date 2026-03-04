@@ -1,80 +1,250 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quick Start Guide
+description: Get up and running with Rishton Academy School Management System in minutes
 ---
 
-## Get started in three steps
+## Welcome to Rishton Academy
 
-Get your documentation site running locally and make your first customization.
+This quick start guide will help you set up and start using the School Management System right away. The system manages students, teachers, parents, classes, gym members, and salary information for Rishton Academy Primary School.
 
-### Step 1: Set up your local environment
+<Steps>
+  <Step title="Set Up Database Connection">
+    Create your database connection using the following configuration:
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
+    ```php
+    $link = mysqli_connect(
+        "sdb-57.hosting.stackcp.net", 
+        "student84-353031351c89", 
+        "ua92-studentAc", 
+        "student84-353031351c89"
+    );
     
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
+    // Check connection
+    if ($link === false) {
+        die("Connection failed: ");
+    }
+    ```
+
+    <Note>
+      Ensure your MySQL server is running and accessible before establishing the connection.
+    </Note>
+  </Step>
+
+  <Step title="Access the System">
+    Open your web browser and navigate to `index.html` to access the main dashboard:
+
+    ```bash
+    http://localhost/your-project-path/index.html
+    ```
+
+    You'll see the main navigation with dropdown menus for:
+    - **View** - Display records for students, teachers, parents, classes, contacts, gym members, and salaries
+    - **Add** - Create new records
+    - **Delete** - Remove existing records
+    - **Update** - Modify existing records
+    - **Contact Us** - Communication portal
+  </Step>
+
+  <Step title="Add Your First Student">
+    Navigate to **Add > Student** or directly access `AddStudent.html`, then fill in the student form:
+
+    ```php
+    // The form data will be processed by AddStudent.php
+    if (isset($_POST['submit'])) {
+        $Sname = $_POST['Sname'];
+        $Ssurname = $_POST['Ssurname'];
+        $Sbirthday = $_POST['Sbirthday'];
+        $Parent_ID = $_POST['Parent_ID'];
+        $Class_ID = $_POST['Class_ID'];
+
+        $send = "INSERT INTO Student1 (Sname,Ssurname,Sbirthday,Parent_ID,Class_ID) 
+                 VALUES ('$Sname','$Ssurname','$Sbirthday','$Parent_ID','$Class_ID')";
+        
+        if (mysqli_query($link, $send)) {
+            echo "New record created successfully";
+        } else {
+            echo "Error adding record ";
+        }
+    }
+    ```
+
+    <Warning>
+      Make sure the Parent_ID and Class_ID exist in their respective tables before adding a student.
+    </Warning>
+  </Step>
+
+  <Step title="Add a Teacher">
+    Navigate to **Add > Teacher** to create teacher records:
+
+    ```php
+    // Processed by AddTeacher.php
+    if (isset($_POST['submit'])) {
+        $bonus_amount = $_POST['bonus_amount'];
+        $teacher_field = $_POST['teacher_field'];
+        $Tname = $_POST['Tname'];
+        $Tsurname = $_POST['Tsurname'];
+        $Taddress = $_POST['Taddress'];
+        $Tmobile = $_POST['Tmobile'];
+        $Temail = $_POST['Temail'];
+
+        $sql = "INSERT INTO Teacher (bonus_amount,teacher_field,Tname,Tsurname,
+                Taddress,Tmobile,Temail) VALUES ('$bonus_amount','$teacher_field',
+                '$Tname','$Tsurname','$Taddress','$Tmobile','$Temail')";
+        
+        if (mysqli_query($link, $sql)) {
+            echo "New record created successfully";
+        }
+    }
+    ```
+  </Step>
+
+  <Step title="View Records">
+    To view all students, access `ViewStudent.php`:
+
+    ```php
+    // Query to fetch all students
+    $sql = mysqli_query($link, 
+        "SELECT Sid,Sname,Ssurname,Sbirthday,Parent_ID,Class_ID FROM Student1"
+    );
     
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+    // Display results in a table
+    while ($row = $sql->fetch_assoc()) {
+        echo "<tr>
+            <th>{$row['Sid']}</th>
+            <th>{$row['Sname']}</th>
+            <th>{$row['Ssurname']}</th>
+            <th>{$row['Sbirthday']}</th>
+            <th>{$row['Parent_ID']}</th>
+            <th>{$row['Class_ID']}</th>
+        </tr>";
+    }
+    ```
+  </Step>
+</Steps>
 
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
+## Common Operations
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Update Records" icon="pen-to-square" href="#update-student">
+    Modify existing student information
+  </Card>
+  <Card title="Delete Records" icon="trash" href="#delete-student">
+    Remove student records from the system
+  </Card>
+  <Card title="Manage Classes" icon="chalkboard" href="#classes">
+    Create and assign classes to teachers
+  </Card>
+  <Card title="View Teachers" icon="user-tie" href="#teachers">
+    Access teacher information and assignments
+  </Card>
 </CardGroup>
 
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+### Update Student
+
+To update student information:
+
+```php
+// Processed by UptadeStudent.php
+if (isset($_POST['submit'])) {
+    $Sid = $_POST['Sid'];
+    $Sname = $_POST['Sname'];
+    $Ssurname = $_POST['Ssurname'];
+    $Sbirthday = $_POST['Sbirthday'];
+
+    $uptade = "UPDATE Student1 SET Sname = '$Sname', 
+               Ssurname = '$Ssurname', Sbirthday='$Sbirthday' 
+               WHERE Sid = '$Sid'";
+    
+    if (mysqli_query($link, $uptade)) {
+        echo "Record has been uptaded.";
+    } else {
+        echo "Error uptading record.";
+    }
+}
+```
+
+### Delete Student
+
+To remove a student record:
+
+```php
+// Processed by DeleteStudent.php
+if (isset($_POST['submit'])) {
+    $Sid = $_POST['Sid'];
+    $delete = "DELETE FROM Student1 WHERE Sid=$Sid";
+
+    if (mysqli_query($connection, $delete)) {
+        echo "Record has been deleted.";
+    } else {
+        echo "Error deleting record.";
+    }
+}
+```
+
+<Warning>
+  Deleting records is permanent. Ensure you have backups before performing delete operations.
+</Warning>
+
+### Classes
+
+Create a new class with assigned teacher:
+
+```php
+// Processed by AddClass.php
+if (isset($_POST['submit'])) {
+    $classYear = $_POST['classYear'];
+    $capacity = $_POST['capacity'];
+    $Teacher_ID = $_POST['Teacher_ID'];
+
+    $sql = "INSERT INTO Class (classYear,capacity,Teacher_ID) 
+            VALUES ('$classYear','$capacity','$Teacher_ID')";
+    
+    if (mysqli_query($link, $sql)) {
+        echo "New record created successfully";
+    } else {
+        echo "Error adding record ";
+    }
+}
+```
+
+### Teachers
+
+View all teacher records with their details:
+
+```php
+// From ViewTeacher.php
+$sql = mysqli_query($link, 
+    "SELECT Teacher_ID,bonus_amount,teacher_field,Tname,Tsurname,
+     Taddress,Tmobile,Temail FROM Teacher"
+);
+
+while ($row = $sql->fetch_assoc()) {
+    echo "<tr>
+        <th>{$row['Teacher_ID']}</th>
+        <th>{$row['bonus_amount']}</th>
+        <th>{$row['teacher_field']}</th>
+        <th>{$row['Tname']}</th>
+        <th>{$row['Tsurname']}</th>
+        <th>{$row['Taddress']}</th>
+        <th>{$row['Tmobile']}</th>
+        <th>{$row['Temail']}</th>
+    </tr>";
+}
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Installation Guide" icon="download" href="/installation">
+    Detailed installation and configuration instructions
+  </Card>
+  <Card title="Database Schema" icon="database">
+    Learn about the complete database structure
+  </Card>
+  <Card title="Admin Login" icon="shield">
+    Set up secure administrator access
+  </Card>
+  <Card title="Advanced Features" icon="wand-magic-sparkles">
+    Explore gym membership and salary management
+  </Card>
+</CardGroup>

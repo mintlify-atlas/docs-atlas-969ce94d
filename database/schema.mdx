@@ -1,0 +1,301 @@
+---
+title: Database Schema
+description: Complete reference of database tables, fields, and relationships in the school management system
+---
+
+## Database Overview
+
+The school management system uses the database `student84-353031351c89` with multiple tables to manage students, teachers, parents, classes, gym memberships, and administrative functions.
+
+## Table Structures
+
+### Student1 Table
+
+Stores student information and their relationships to parents and classes.
+
+**Table Name:** `Student1`
+
+| Field Name | Type | Description | Example |
+|------------|------|-------------|----------|
+| `Sid` | INT (Auto-increment) | Primary key, student ID | 1, 2, 3 |
+| `Sname` | VARCHAR | Student first name | "John" |
+| `Ssurname` | VARCHAR | Student last name | "Smith" |
+| `Sbirthday` | DATE | Student date of birth | "2010-05-15" |
+| `Parent_ID` | INT | Foreign key to Parent table | 1 |
+| `Class_ID` | INT | Foreign key to Class table | 5 |
+
+**Referenced in:**
+- `AddStudent.php:39` - INSERT operation
+- `ViewStudent.php:166` - SELECT operation
+- `DeleteStudent.php:13` - DELETE operation
+- `UptadeStudent.php:19` - UPDATE operation
+
+**Sample Query:**
+```php
+$sql = mysqli_query($link, "SELECT Sid,Sname,Ssurname,Sbirthday,Parent_ID,Class_ID FROM Student1");
+```
+
+---
+
+### Teacher Table
+
+Stores teacher information including contact details and compensation.
+
+**Table Name:** `Teacher`
+
+| Field Name | Type | Description | Example |
+|------------|------|-------------|----------|
+| `Teacher_ID` | INT (Auto-increment) | Primary key, teacher ID | 1, 2, 3 |
+| `bonus_amount` | DECIMAL | Teacher bonus amount | 500.00 |
+| `teacher_field` | VARCHAR | Teaching subject/field | "Mathematics" |
+| `Tname` | VARCHAR | Teacher first name | "Jane" |
+| `Tsurname` | VARCHAR | Teacher last name | "Doe" |
+| `Taddress` | VARCHAR | Teacher address | "123 Main St" |
+| `Tmobile` | VARCHAR | Teacher phone number | "555-1234" |
+| `Temail` | VARCHAR | Teacher email address | "jane@school.edu" |
+
+**Referenced in:**
+- `AddTeacher.php:23` - INSERT operation
+- `ViewTeacher.php:168` - SELECT operation
+
+**Sample Query:**
+```php
+$sql = "INSERT INTO Teacher (bonus_amount,teacher_field,Tname,Tsurname,Taddress,Tmobile,Temail) 
+        VALUES ('$bonus_amount','$teacher_field','$Tname','$Tsurname','$Taddress','$Tmobile','$Temail')";
+```
+
+---
+
+### Parent Table
+
+Stores parent/guardian information for students.
+
+**Table Name:** `Parent`
+
+| Field Name | Type | Description | Example |
+|------------|------|-------------|----------|
+| `Parent_ID` | INT (Auto-increment) | Primary key, parent ID | 1, 2, 3 |
+| `Pname` | VARCHAR | Parent first name | "Robert" |
+| `Psurname` | VARCHAR | Parent last name | "Smith" |
+| `Paddress` | VARCHAR | Parent address | "456 Oak Ave" |
+| `Pemail` | VARCHAR | Parent email | "robert@email.com" |
+
+**Referenced in:**
+- `AddParent.php:20` - INSERT operation
+
+**Sample Query:**
+```php
+$sql = "INSERT INTO Parent (Pname,Psurname,Paddress,Pemail) 
+        VALUES ('$pname','$psurname','$paddress','$pemail')";
+```
+
+---
+
+### Class Table
+
+Stores class information with capacity and assigned teachers.
+
+**Table Name:** `Class`
+
+| Field Name | Type | Description | Example |
+|------------|------|-------------|----------|
+| `Class_ID` | INT (Auto-increment) | Primary key, class ID | 1, 2, 3 |
+| `classYear` | VARCHAR | Academic year/grade | "Year 9", "Grade 10" |
+| `capacity` | INT | Maximum students | 30 |
+| `Teacher_ID` | INT | Foreign key to Teacher table | 2 |
+
+**Referenced in:**
+- `AddClass.php:21` - INSERT operation
+
+**Sample Query:**
+```php
+$sql = "INSERT INTO Class (classYear,capacity,Teacher_ID) 
+        VALUES ('$classYear','$capacity','$Teacher_ID')";
+```
+
+---
+
+### Gym Table
+
+Stores gym membership information for students.
+
+**Table Name:** `Gym`
+
+| Field Name | Type | Description | Example |
+|------------|------|-------------|----------|
+| `gymMemberID` | INT (Auto-increment) | Primary key, gym member ID | 1, 2, 3 |
+| `Sid` | INT | Foreign key to Student1 table | 5 |
+| `gymFullName` | VARCHAR | Member full name | "John Smith" |
+| `userRegDate` | DATE | Registration date | "2024-01-15" |
+| `memberType` | ENUM/VARCHAR | Membership tier | "bronzeMember", "silverMember", "goldMember", "diamondMember" |
+| `medicalCondition` | TEXT | Medical conditions | "Asthma" |
+
+**Membership Types:**
+- `bronzeMember` - 30 days validity
+- `silverMember` - 60 days validity
+- `goldMember` - 90 days validity
+- `diamondMember` - 180 days validity
+
+**Referenced in:**
+- `AddGymMember.php:212` - INSERT operation
+
+**Sample Query:**
+```php
+$gym = "INSERT INTO Gym (Sid,gymFullName,userRegDate,memberType,medicalCondition) 
+        VALUES ('$Sid','$gymFullName','$userRegDate','$memberType','$medicalCondition')";
+```
+
+---
+
+### Salary Table
+
+Stores teacher salary information.
+
+**Table Name:** `Salary`
+
+| Field Name | Type | Description | Example |
+|------------|------|-------------|----------|
+| `Salary_ID` | INT (Auto-increment) | Primary key, salary record ID | 1, 2, 3 |
+| `Teacher_ID` | INT | Foreign key to Teacher table | 2 |
+| `salary_amount` | DECIMAL | Salary amount | 3500.00 |
+| `workingTimes` | VARCHAR | Working hours/schedule | "Full-time", "Part-time" |
+
+**Referenced in:**
+- `AddSalary.php:19` - INSERT operation
+
+**Sample Query:**
+```php
+$sql = "INSERT INTO Salary (Teacher_ID,salary_amount,workingTimes) 
+        VALUES ('$Teacher_ID','$salary_amount','$workingTimes')";
+```
+
+---
+
+### admin_login Table
+
+Stores administrator login credentials.
+
+**Table Name:** `admin_login`
+
+| Field Name | Type | Description | Example |
+|------------|------|-------------|----------|
+| `admin_id` | INT (Auto-increment) | Primary key | 1 |
+| `admin_user` | VARCHAR | Administrator username | "admin" |
+| `admin_pass` | VARCHAR | Administrator password | "password123" |
+
+**Referenced in:**
+- `admin_login.php:160` - SELECT operation
+
+**Sample Query:**
+```php
+$query="SELECT * FROM `admin_login` 
+        WHERE admin_user=$_POST['admin_user'] AND admin_pass=$_POST['admin_pass']";
+```
+
+<Warning>
+This authentication query has critical security vulnerabilities. See the [Security](/database/security) page for details.
+</Warning>
+
+---
+
+## Table Relationships
+
+### Entity Relationship Diagram
+
+```
+┌──────────┐         ┌─────────┐         ┌──────────┐
+│  Parent  │────────<│Student1 │>────────│   Class  │
+│          │ 1     * │         │ *     1 │          │
+└──────────┘         └────┬────┘         └────┬─────┘
+                          │ 1                  │ 1
+                          │                    │
+                          │ *                  │ *
+                     ┌────┴────┐         ┌─────┴─────┐
+                     │   Gym   │         │  Teacher  │
+                     └─────────┘         └─────┬─────┘
+                                               │ 1
+                                               │
+                                               │ *
+                                         ┌─────┴─────┐
+                                         │  Salary   │
+                                         └───────────┘
+```
+
+### Foreign Key Relationships
+
+1. **Student1.Parent_ID** → Parent.Parent_ID
+   - Each student has one parent/guardian
+   - A parent can have multiple students
+
+2. **Student1.Class_ID** → Class.Class_ID
+   - Each student belongs to one class
+   - A class can have multiple students (up to capacity)
+
+3. **Class.Teacher_ID** → Teacher.Teacher_ID
+   - Each class is assigned one teacher
+   - A teacher can teach multiple classes
+
+4. **Gym.Sid** → Student1.Sid
+   - Each gym membership is linked to one student
+   - A student can have one gym membership
+
+5. **Salary.Teacher_ID** → Teacher.Teacher_ID
+   - Each salary record belongs to one teacher
+   - A teacher can have multiple salary records
+
+## Common Query Patterns
+
+### Inserting Records
+
+```php
+$sql = "INSERT INTO TableName (field1,field2,field3) 
+        VALUES ('$value1','$value2','$value3')";
+        
+if (mysqli_query($link, $sql)) {
+    echo "New record created successfully";
+} else {
+    echo "Error adding record ";
+}
+```
+
+### Selecting Records
+
+```php
+$sql = mysqli_query($link, "SELECT field1,field2,field3 FROM TableName");
+
+while ($row = $sql->fetch_assoc()) {
+    echo $row['field1'];
+    echo $row['field2'];
+    echo $row['field3'];
+}
+```
+
+### Updating Records
+
+```php
+$update = "UPDATE TableName 
+           SET field1 = '$value1', field2 = '$value2' 
+           WHERE id = '$id'";
+           
+if(mysqli_query($link, $update)) {
+    echo "Record has been updated.";
+} else {
+    echo "Error updating record.";
+}
+```
+
+### Deleting Records
+
+```php
+$delete = "DELETE FROM TableName WHERE id=$id";
+
+if(mysqli_query($connection, $delete)) {
+    echo "Record has been deleted.";
+} else {
+    echo "Error deleting record.";
+}
+```
+
+<Warning>
+All query examples shown are taken directly from the source code. These queries are vulnerable to SQL injection attacks. Please see the [Security](/database/security) page for secure alternatives.
+</Warning>
